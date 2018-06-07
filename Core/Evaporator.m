@@ -107,7 +107,7 @@ classdef Evaporator < Block
         function y = liquidOut(obj)
             for n = 1:length(obj.outStreams)
                 currentStream = obj.getOutStream(n);
-                if(strcmp(currentStream.type,'LSTREAM') && ~strcmp(currentStream.subtype,'COND'))
+                if(strcmp(currentStream.type,'LSTREAM'))
                     y = currentStream;
                 end
             end
@@ -116,7 +116,7 @@ classdef Evaporator < Block
         function y = condensateOut(obj)
             for n = 1:length(obj.outStreams)
                 currentStream = obj.getOutStream(n);
-                if(strcmp(currentStream.type,'LSTREAM') && strcmp(currentStream.subtype,'COND'))
+                if(strcmp(currentStream.type,'CSTREAM'))
                     y = currentStream;
                 end
             end
