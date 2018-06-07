@@ -16,13 +16,27 @@ classdef Block < handle
            obj.outStreams = {};
            obj.index = -1;
         end
-
+        
+        function [lb,ub] = getBounds(obj,engine,lb,ub)            
+        end
+        
         function y = numUnknowns(obj)
             y = 0;
         end
         function y = numKnown(obj)
             y = 0;
         end
+      
+        function y = preallocateVariables(~,startingIndex)
+            y = startingIndex;
+        end
+        
+        function obj = fetchVariables(obj,~)
+        end
+        
+        function guess = transportInitialGuesses(~,~)
+        end
+        
         function obj = addInStream(obj,stream)
            obj.inStreams{end+1} = stream;
         end

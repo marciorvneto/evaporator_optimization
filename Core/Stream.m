@@ -40,6 +40,17 @@ classdef Stream < handle
             obj.originBlock = 0;
             obj.endBlock = 0;
         end
+        function [lb,ub] = getBounds(obj,engine,lb,ub)
+            lb(obj.iFlow) = engine.flowBounds(1);
+            ub(obj.iFlow) = engine.flowBounds(2);
+            lb(obj.iTemperature) = engine.temperatureBounds(1);
+            ub(obj.iTemperature) = engine.temperatureBounds(2);
+        end
+        function y = preallocateVariables(obj,startingIndex)
+            obj.iTemperature = startingIndex;
+            obj.iFlow = startingIndex + 1;
+            y = startingIndex + 2;
+        end
         function y = numUnknowns(obj)
             y = 2;
         end

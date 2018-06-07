@@ -46,13 +46,13 @@ L_2_1B = LiquidStream('L_2_1B','BLIQ');
 L_1B_1A = LiquidStream('L_1B_1A','BLIQ');
 L_1A_FlashBL = LiquidStream('L_1A_FlashBL','BLIQ');
 
-C_1A = LiquidStream('C_1A','COND');
-C_1B = LiquidStream('C_1B','COND');
-C_2 = LiquidStream('C_2','COND');
-C_3 = LiquidStream('C_3','COND');
-C_4 = LiquidStream('C_4','COND');
-C_5 = LiquidStream('C_5','COND');
-C_6 = LiquidStream('C_6','COND');
+C_1A = CondensateStream('C_1A','COND');
+C_1B = CondensateStream('C_1B','COND');
+C_2 = CondensateStream('C_2','COND');
+C_3 = CondensateStream('C_3','COND');
+C_4 = CondensateStream('C_4','COND');
+C_5 = CondensateStream('C_5','COND');
+C_6 = CondensateStream('C_6','COND');
 
 
 % Here we define the liquid and vapor mixers and splitters.
@@ -184,6 +184,7 @@ handler.connectOutStream(E6,C_6);
 %% Engine setup
 
 engine = Engine(handler);
+engine.preallocateVariables(handler);
 
 %%  ========= Objective function ===========
 

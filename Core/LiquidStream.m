@@ -22,6 +22,13 @@ classdef LiquidStream < Stream
             obj.x_dis = 0.5;
             obj.x_tot = 0.5;
         end
+        function [lb,ub] = getBounds(obj,engine,lb,ub)
+            [lb,ub] = getBounds@Stream(obj,engine,lb,ub);
+            lb(obj.iX_dis) = engine.x_disBounds(1);
+            ub(obj.iX_dis) = engine.x_disBounds(2);
+            lb(obj.iX_tot) = engine.x_totBounds(1);
+            ub(obj.iX_tot) = engine.x_totBounds(2);
+        end
         function y = numUnknowns(obj)
             y = numUnknowns@Stream(obj) + 2;
         end
@@ -29,11 +36,10 @@ classdef LiquidStream < Stream
             y = obj.fixedTemperature + obj.fixedFlow + obj.fixedX_Dis + obj.fixedX_Tot;
         end
         function y = preallocateVariables(obj,startingIndex)
-            obj.iTemperature = startingIndex;
-            obj.iFlow = startingIndex + 1;
-            obj.iX_tot = startingIndex + 2;
-            obj.iX_dis = startingIndex + 3;
-            y = startingIndex + 4;
+            startingIndex = preallocateVariables@Stream(obj,startingIndex);
+            obj.iX_tot = startingIndex;
+            obj.iX_dis = startingIndex + 1;
+            y = startingIndex + 2;
         end
         function guess = transportInitialGuesses(obj,var)
             guess = var;

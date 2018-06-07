@@ -23,8 +23,11 @@ classdef Handler < handle
         function y = getStream(obj,n)
             y = obj.streams{n};
         end
-        function y = numUnknowns(obj,n)
+        function y = numUnknownsStream(obj,n)
             y = obj.streams{n}.numUnknowns();
+        end
+        function y = numUnknownsBlock(obj,n)
+            y = obj.blocks{n}.numUnknowns();
         end
         function y = numEquations(obj,n)
             y = obj.blocks{n}.numEquations();

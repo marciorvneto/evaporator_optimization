@@ -6,6 +6,9 @@ classdef Evaporator < Block
         U;
         A;
         Q;
+        
+        iQ;
+        iA;
 
         fixedA = false;
         fixedQ = false;
@@ -16,13 +19,21 @@ classdef Evaporator < Block
             obj = obj@Block('EVA');
             obj.U = U;
             obj.A = A;
-            Q = 0;
+            obj.Q = 0;
 
             obj.iA = -1;
             obj.iQ = -1;
         end
 
         % ====== Helper ========
+        
+        function [lb,ub] = getBounds(obj,engine,lb,ub)            
+            lb(obj.iA) = engine.ABounds(1);
+            ub(obj.iA) = engine.ABounds(2);
+            lb(obj.iQ) = engine.QBounds(1);
+            ub(obj.iQ) = engine.QBounds(2);
+        end
+        
         function y = numUnknowns(obj)
             y = numUnknowns@Block(obj) + 2;
         end
@@ -137,6 +148,9 @@ classdef Evaporator < Block
             TV = var(vaporOut.iTemperature);
             TL = var(liquidOut.iTemperature);
             TC = var(condensateOut.iTemperature);
+            
+            PS = var(vaporFeed.iPressure);
+            PC = var(condensateOut.iPressure);
 
             xL_dis = var(liquidOut.iX_dis);
             xL_tot = var(liquidOut.iX_tot);
@@ -151,8 +165,6 @@ classdef Evaporator < Block
 
             % Enthalpies
 
-            lambdaTS = hSatV_T(TS) - hSatL_T(Tsat);
-            lambdaTV = hSatV_T(TV) - hSatL_T(Tsat);
             hF = hLiq(liquidFeed,xF_dis,TF);
             hL = hLiq(liquidOut,xL_dis,TL);
             hC = hSatL_T(TS);

@@ -8,21 +8,30 @@ classdef Engine < handle
         flowBounds;
         x_disBounds;
         x_totBounds;
+        pressureBounds;
+        QBounds;
+        ABounds;        
     end
     
     methods
         function obj = Engine(handler)
            obj.handler = handler;
            obj.temperatureBounds = [100,600];
-           obj.flowBounds = [0,50];
+           obj.pressureBounds = [0,1000];
+           obj.flowBounds = [0,100];
            obj.x_disBounds = [0,1];
            obj.x_totBounds = [0,1];
+           obj.QBounds = [0 1e6];
+           obj.ABounds = [0 1e6];
         end
         
         function u = numUnknowns(obj,handler)
            u = 0;
            for n = 1:handler.numStreams()
-              u = u + handler.numUnknowns(n); 
+              u = u + handler.numUnknownsStream(n); 
+           end
+           for n = 1:handler.numBlocks()
+              u = u + handler.numUnknownsBlock(n); 
            end
         end
         
@@ -63,6 +72,10 @@ classdef Engine < handle
             for n = 1:handler.numStreams()
                 currentStream = handler.getStream(n);
                 currentIndex = currentStream.preallocateVariables(currentIndex);
+            end
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                currentIndex = currentBlock.preallocateVariables(currentIndex);
             end
         end
         
@@ -206,20 +219,11 @@ classdef Engine < handle
             ub = zeros(obj.numUnknowns(handler),1);
             for n = 1:handler.numStreams()
                 currentStream = handler.getStream(n);
-                iFlow = currentStream.iFlow;
-                iTemperature = currentStream.iTemperature;
-                lb(iFlow) = obj.flowBounds(1);
-                ub(iFlow) = obj.flowBounds(2);
-                lb(iTemperature) = obj.temperatureBounds(1);
-                ub(iTemperature) = obj.temperatureBounds(2);
-                if(strcmp(currentStream.type,'LSTREAM'))
-                    iX_dis = currentStream.iX_dis;
-                    iX_tot = currentStream.iX_tot;
-                    lb(iX_dis) = obj.x_disBounds(1);
-                    ub(iX_dis) = obj.x_disBounds(2);
-                    lb(iX_tot) = obj.x_totBounds(1);
-                    ub(iX_tot) = obj.x_totBounds(2);
-                end
+                [lb,ub] = currentStream.getBounds(obj,lb,ub);
+            end
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                [lb,ub] = currentBlock.getBounds(obj,lb,ub);
             end
         end
         
