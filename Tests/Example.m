@@ -8,6 +8,10 @@ addpath('../Numerical routines');
 
 %% Block definitions
 
+% Here we define evaporators E1A - E6. Notice that the definitions take the the form
+% Evaporator(U,A), where U is the global heat exchange coefficient in kW/m²K and A
+% is the heat exchange area in m²
+
 E1A = Evaporator(1.062,408.77);
 E1B = Evaporator(1.397,408.77);
 E2 = Evaporator(2.402,817.55);
@@ -16,6 +20,7 @@ E4 = Evaporator(1.777,817.55);
 E5 = Evaporator(1.323,817.55);
 E6 = Evaporator(1.062,817.55);
 
+% Here we define the vapor and liquid streams.
 
 V_0_VSP1 = VaporStream('V_0_Split','VAPO');
 V_VSP1_1A = VaporStream('V_Split_1A','VAPO');
@@ -49,6 +54,9 @@ C_4 = LiquidStream('C_4','COND');
 C_5 = LiquidStream('C_5','COND');
 C_6 = LiquidStream('C_6','COND');
 
+
+% Here we define the liquid and vapor mixers and splitters.
+
 VMX1 = VMixer();
 LMX1 = LMixer();
 VSP1 = VSplitter(0.5);
@@ -57,17 +65,10 @@ LSP1 = LSplitter(0.5);
 
 %% Input data
 
-% LS pressure = 31.6 psig = 217.1849 + 100 kPs = 317.18 kPa
-% LS temperature = 408.58 K
-% LS flow = 51.7 klb/hr = 6.51 kg/s
-
 V_0_VSP1.temperature = 408.58;
 V_0_VSP1.flow = 6.51;
 V_0_VSP1.fixedTemperature = true;
 V_0_VSP1.fixedFlow = true;
-
-% WL flow = 333 lb/hr = 0.042 kg/s
-% WL solids = 0.1393
 
 L_0_LSP1.flow = 0.042;
 L_0_LSP1.x_dis = 0.1393;
@@ -76,23 +77,14 @@ L_0_LSP1.fixedFlow = true;
 L_0_LSP1.fixedX_Dis = true;
 L_0_LSP1.fixedX_Tot = true;
 
-% L_0_LSP1.temperature = 273.16 + 60;  % Not sure
-% L_0_LSP1.fixedTemperature = true;
-
-% 6th effect vacuum = 26 in. Hg = 88046.1 Pa
-% 6th effect temperature = 369.24 K
-
-% V_6_Condenser.temperature = 369.24;
-% V_6_Condenser.fixedTemperature = true;
-
 % Solids out
 
 L_1A_FlashBL.x_dis = 0.514;
-% L_1A_FlashBL.x_tot = 0.514;
 L_1A_FlashBL.fixedX_Dis = true;
-% L_1A_FlashBL.fixedX_Tot = true;
 
 %% Simulator setup
+
+% We need to create a Handler to collect all the elements created above.
 
 handler = Handler();
 
@@ -199,7 +191,3 @@ fun = @(x) engine.evaluateBalances(x,engine.handler);
 
 objectiveFunction = @(x) fun(x)'*fun(x); % <----- call this
 [lb,ub] = engine.getBounds(engine.handler); % <----- upper and lower bounds
-
-
-
-
