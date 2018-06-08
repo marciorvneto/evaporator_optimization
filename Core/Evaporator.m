@@ -37,9 +37,11 @@ classdef Evaporator < Block
         function y = numUnknowns(obj)
             y = numUnknowns@Block(obj) + 2;
         end
-        function y = numKnown(obj)
-            y = obj.fixedA + obj.fixedQ;
+        
+        function y = numEquations(obj)
+            y = 11 + obj.fixedA + obj.fixedQ;
         end
+
         function y = preallocateVariables(obj,startingIndex)
             obj.iA = startingIndex;
             obj.iQ = startingIndex + 1;
@@ -53,9 +55,6 @@ classdef Evaporator < Block
             guess = var;
             guess(obj.iA) = obj.A;
             guess(obj.iQ) = obj.Q;
-        end
-        function y = numEquations(obj)
-            y = 11;
         end
 
         function y = hasFlashFeed(obj)
@@ -179,6 +178,16 @@ classdef Evaporator < Block
             y(9) = Q - obj.U*A*(TS-TL);
             y(10) = Q + F*hF - (V*HV + L*hL);
             y(11) = TC - Steam.satT(PC/1000);
+            
+            count = 12;
+            if(obj.fixedA)
+                y(count) = obj.A - var(obj.iA);
+                count = count + 1;
+            end
+            if(obj.fixedQ)
+                y(count) = obj.Q - var(obj.iQ);
+                count = count + 1;
+            end
 
         end
 

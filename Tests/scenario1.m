@@ -28,9 +28,13 @@ F1 = Flash('F1');
 VMIX = VMixer('VMIX');
 VMixOut = VaporStream('VMixOut','VAPO');
 VFlash = VaporStream('VFlash','VAPO');
-LFlash = LiquidStream('LFlash','BLIQ');
+LFlash = CondensateStream('LFlash','BLIQ');
 
 %% Input data
+
+E1.fixedA = true;
+E2.fixedA = true;
+E3.fixedA = true;
 
 V0.temperature = 120+273.16;
 V0.fixedTemperature = true;
@@ -46,11 +50,9 @@ L3.fixedX_Tot = true;
 L0.x_dis = 0.5;
 L0.fixedX_Dis = true;
 
-V1.flow = 10;
-V1.fixedFlow = true;
-
-% VMixOut.temperature = 360;
-% VMixOut.fixedTemperature = true;
+V1.temperature = 60 + 273.16;
+V1.fixedTemperature = true;
+V1.saturated = true;
 
 %% Simulator setup
 

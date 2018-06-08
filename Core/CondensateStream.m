@@ -20,7 +20,7 @@ classdef CondensateStream < Stream
 
         end
         function y = numUnknowns(obj)
-            y = numUnknowns@Stream(obj) + 2;
+            y = numUnknowns@Stream(obj) + 1;
         end
         function y = numEquations(obj)
             y = numEquations@Stream(obj) + obj.fixedPressure;
@@ -48,13 +48,7 @@ classdef CondensateStream < Stream
             obj.pressure = result(obj.iPressure);
         end
         function y = evaluate(obj,var)
-            y = [];
-            if(obj.fixedFlow)
-                y(end+1) = var(obj.iFlow) - obj.flow;
-            end
-            if(obj.fixedTemperature)
-                y(end+1) = var(obj.iTemperature) - obj.temperature;
-            end
+            y = evaluate@Stream(obj,var);
             if(obj.fixedPressure)
                 y(end+1) = var(obj.iPressure) - obj.pressure;
             end

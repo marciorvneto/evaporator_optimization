@@ -15,7 +15,7 @@ classdef VaporStream < Stream
             obj = obj@Stream('VSTREAM',name,subtype);
             
             obj.fixedPressure = false;
-            obj.saturated = true;
+            obj.saturated = false;
 
             obj.iPressure = -1;
 
@@ -49,13 +49,8 @@ classdef VaporStream < Stream
             guess(obj.iPressure) = obj.pressure;
         end
         function y = evaluate(obj,var)
+            y = evaluate@Stream(obj,var);
             y = [];
-            if(obj.fixedFlow)
-                y(end+1) = var(obj.iFlow) - obj.flow;
-            end
-            if(obj.fixedTemperature)
-                y(end+1) = var(obj.iTemperature) - obj.temperature;
-            end
             if(obj.fixedPressure)
                 y(end+1) = var(obj.iPressure) - obj.pressure;
             end

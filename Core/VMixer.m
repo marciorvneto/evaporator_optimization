@@ -10,7 +10,7 @@ classdef VMixer < Block
             obj = obj@Block(name);
         end
         function y = numEquations(obj)
-            y = 2 + (length(obj.inStreams) - 1); 
+            y = 3 + (length(obj.inStreams) - 1); 
         end
         
         function y = vaporOut(obj)
@@ -48,14 +48,15 @@ classdef VMixer < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = Fout - sum(Fin) ;
+            y(1) = Fout - sum(Fin);
             y(2) = Fout*Hout - Fin'*Hin;
+            y(3) = var(inStreams{1}.iPressure) - var(vaporOut.iPressure);
             for n=2:length(inStreams)
                 stream1 = inStreams{n};
                 stream2 = inStreams{n-1};                
                 P1 = var(stream1.iPressure);
                 P2 = var(stream2.iPressure);
-                y(2+n) = P1 - P2; 
+                y(3+n) = P1 - P2; 
             end
 
             

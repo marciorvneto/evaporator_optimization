@@ -1,8 +1,10 @@
+clear all, close all, clc
+
 addpath('../Core');
 addpath('../Thermo');
 addpath('../Solvers');
-addpath('/../SteamTables');
-addpath('../../../../Numerical routines');
+addpath('../Thermo/SteamTables');
+addpath('../Numerical routines');
 
 %% Block definitions
 
@@ -28,11 +30,13 @@ F1 = Flash('F1');
 VMIX = VMixer('VMIX');
 VMixOut = VaporStream('VMixOut','VAPO');
 VFlash = VaporStream('VFlash','VAPO');
-LFlash = LiquidStream('LFlash','BLIQ');
-
-PEQ1 = PressureEqualizer('PEQ1',VFlash,V2);
+LFlash = CondensateStream('LFlash','BLIQ');
 
 %% Input data
+
+E1.fixedA = true;
+E2.fixedA = true;
+E3.fixedA = true;
 
 V0.temperature = 120+273.16;
 V0.fixedTemperature = true;
@@ -48,11 +52,9 @@ L3.fixedX_Tot = true;
 L0.x_dis = 0.5;
 L0.fixedX_Dis = true;
 
-V1.flow = 10;
-V1.fixedFlow = true;
-
-% VMixOut.temperature = 360;
-% VMixOut.fixedTemperature = true;
+V1.temperature = 60 + 273.16;
+V1.fixedTemperature = true;
+V1.saturated = true;
 
 %% Simulator setup
 
@@ -83,7 +85,6 @@ handler.addBlock(VMIX);
 handler.addBlock(F1);
 handler.addStream(VFlash);
 handler.addStream(LFlash);
-handler.addBlock(PEQ1);
 
 %% Connectivity
 
@@ -120,3 +121,14 @@ engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
 [lb,ub] = engine.getBounds(engine.handler);
+
+fun = @(x) engine.evaluateBalances(x,engine.handler);
+
+opts = [];
+opts.LBounds = lb;
+opts.UBounds = ub;
+opts.Restarts = 0;
+opts.PopSize = 50;
+opts.LogPlot = true;
+
+[XMIN, FMIN, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('fobj', (lb+ub)/2, 0.5*(ub-lb),opts,engine);

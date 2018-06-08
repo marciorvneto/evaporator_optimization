@@ -55,13 +55,7 @@ classdef LiquidStream < Stream
             obj.x_tot = result(obj.iX_tot);
         end
         function y = evaluate(obj,var)
-            y = [];
-            if(obj.fixedFlow)
-                y(end+1) = var(obj.iFlow) - obj.flow;
-            end
-            if(obj.fixedTemperature)
-                y(end+1) = var(obj.iTemperature) - obj.temperature;
-            end
+            y = evaluate@Stream(obj,var);
             if(obj.fixedX_Dis)
                 y(end+1) = var(obj.iX_dis) - obj.x_dis;
             end

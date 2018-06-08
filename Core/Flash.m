@@ -13,7 +13,7 @@ classdef Flash < Block
         % ====== Helper ========
         
         function y = numEquations(obj)
-            y = 5; 
+            y = 4; 
         end
         
         function y = vaporOut(obj)
@@ -28,7 +28,7 @@ classdef Flash < Block
         function y = liquidOut(obj)
             for n = 1:length(obj.outStreams)
                 currentStream = obj.getOutStream(n);
-                if(strcmp(currentStream.type,'LSTREAM'))
+                if(strcmp(currentStream.type,'CSTREAM'))
                     y = currentStream;
                 end
             end
@@ -37,7 +37,7 @@ classdef Flash < Block
         function y = condensateIn(obj)
             for n = 1:length(obj.inStreams)
                 currentStream = obj.getInStream(n);
-                if(strcmp(currentStream.type,'LSTREAM'))
+                if(strcmp(currentStream.type,'CSTREAM'))
                     y = currentStream;
                 end
             end
@@ -60,34 +60,26 @@ classdef Flash < Block
             TF = var(condensateIn.iTemperature);
             TV = var(vaporOut.iTemperature);
             TL = var(liquidOut.iTemperature);
-
-            xL_dis = var(liquidOut.iX_dis);
-            xL_tot = var(liquidOut.iX_tot);
-            xF_dis = var(condensateIn.iX_dis);
-            xF_tot = var(condensateIn.iX_tot);
             
+            PV = var(vaporOut.iPressure);
+           
             
             % Enthalpies
             
-            lambdaTV = hSatV_T(TV) - hSatL_T(TV);
-%             HV = hSatV_T(TV) - hSatL_T(TV);
-%             hL = cp(xL_dis,TL)*TL;
-%             hF = cp(xF_dis,TF)*TF;
-            hL = hSatL_T(TL);
-            hF = hSatL_T(TF);
+            hL = Steam.hLSatT(TL);
+            hF = Steam.hLSatT(TF);
+            HV = Steam.hVSatT(TV);
             
             % System of equations
             
             y = zeros(obj.numEquations(),1);
             y(1) = F - L - V ;
-            y(2) = F*xF_dis - L*xL_dis;
-            y(3) = F*xF_tot - L*xL_tot;
-            y(4) = TV - TL;
-%             y(5) = V*lambdaTV - (F*hF + L*hL);
-            y(5) = V*lambdaTV + L*cp(xF_dis,TF)*(TL-TF);
-%             y(5) = TV - TF;
+            y(2) = TV - TL;
+            y(3) = F*hF - (L*hL + V*HV);
+            y(4) = TV - Steam.satT(PV);
+
             
-            y(5) = 0.001 * y(5);            
+          
 
         end
         
