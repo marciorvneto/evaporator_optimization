@@ -50,7 +50,6 @@ classdef VaporStream < Stream
         end
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
-            y = [];
             if(obj.fixedPressure)
                 y(end+1) = (var(obj.iPressure) - obj.pressure)/100;
             end

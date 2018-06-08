@@ -87,6 +87,10 @@ classdef Engine < handle
                 currentStream = handler.getStream(n);
                 currentStream.fetchVariables(result);
             end
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                currentBlock.fetchVariables(result);
+            end
         end
         
         function guess = transportInitialGuesses(obj,handler)
