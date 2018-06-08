@@ -1,6 +1,6 @@
 classdef SteamCoefficients
 
-  properties
+  properties (Constant)
 
       region1Coeffs = [1,0,-2,0.14632971213167;
                         2,0,-1,-0.84548187169114;

@@ -54,7 +54,7 @@ classdef Stream < handle
         function y = numUnknowns(obj)
             y = 2;
         end
-        function y = numKnown(obj)
+        function y = numEquations(obj)
             y = obj.fixedTemperature + obj.fixedFlow ;
         end
         

@@ -28,9 +28,9 @@ classdef Steam
     end
 
     function y = gamma(tau,pi)
-        I = SteamCoefficients.region1Coeffs(:,2);
-        J = SteamCoefficients.region1Coeffs(:,3);
-        n = SteamCoefficients.region1Coeffs(:,4);
+        I = SteamCoefficients.region1Coeffs(:,1);
+        J = SteamCoefficients.region1Coeffs(:,2);
+        n = SteamCoefficients.region1Coeffs(:,3);
         sumTerms = (n.*((7.1-pi).^I)).* ((tau-1.222).^J);
         y = sum(sumTerms);
     end
@@ -67,9 +67,9 @@ classdef Steam
     end
 
     function y = gammaTau(tau,pi)
-        I = SteamCoefficients.region1Coeffs(:,2);
-        J = SteamCoefficients.region1Coeffs(:,3);
-        n = SteamCoefficients.region1Coeffs(:,4);
+        I = SteamCoefficients.region1Coeffs(:,1);
+        J = SteamCoefficients.region1Coeffs(:,2);
+        n = SteamCoefficients.region1Coeffs(:,3);
         nPiI = (n).*((7.1-pi).^I);
         jTauJ = (J).*((tau-1.222).^(J-1.0));
         sumTerms = (nPiI).*(jTauJ);
@@ -77,34 +77,34 @@ classdef Steam
     end
 
     function y = gamma0(tau,pi)
-        J = SteamCoefficients.region2Coeffs0(:,2);
-        n = SteamCoefficients.region2Coeffs0(:,3);
+        J = SteamCoefficients.region2Coeffs0(:,1);
+        n = SteamCoefficients.region2Coeffs0(:,2);
         sumTerms = (n).*(tau.^J);
         result = sum(sumTerms);
         y = result + np.log(pi);
     end
 
     function y = gammaTau0(tau)
-        J = SteamCoefficients.region2Coeffs0(:,2);
-        n = SteamCoefficients.region2Coeffs0(:,3);
+        J = SteamCoefficients.region2Coeffs0(:,1);
+        n = SteamCoefficients.region2Coeffs0(:,2);
         jTauJ = (J).*(tau.^(J-1.0));
         sumTerms = (n).*(jTauJ);
         y = sum(sumTerms);
     end
 
     function y = gammaR(tau,pi)
-        I = SteamCoefficients.region2CoeffsR(:,2);
-        J = SteamCoefficients.region2CoeffsR(:,3);
-        n = SteamCoefficients.region2CoeffsR(:,4);
+        I = SteamCoefficients.region2CoeffsR(:,1);
+        J = SteamCoefficients.region2CoeffsR(:,2);
+        n = SteamCoefficients.region2CoeffsR(:,3);
         nPiI = (n).*(pi.^I);
         sumTerms = (nPiI).*((tau-0.5).^J);
         y = sum(sumTerms);
     end
 
     function y = gammaTauR(tau,pi)
-        I = SteamCoefficients.region2CoeffsR(:,2);
-        J = SteamCoefficients.region2CoeffsR(:,3);
-        n = SteamCoefficients.region2CoeffsR(:,4);
+        I = SteamCoefficients.region2CoeffsR(:,1);
+        J = SteamCoefficients.region2CoeffsR(:,2);
+        n = SteamCoefficients.region2CoeffsR(:,3);
         nPiI = (n).*(pi.^I);
         jTauJ = (J).*((tau-0.5).^(J-1.0));
         sumTerms = (nPiI).*(jTauJ);

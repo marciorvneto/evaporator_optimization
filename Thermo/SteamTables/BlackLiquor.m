@@ -13,7 +13,7 @@ classdef BlackLiquor
         tref = 80;
         tC = T - 273.15;
         hw = Steam.hLSatT(273.15 + tref);
-        hmix = a*(-1 + np.exp(-X/b));
+        hmix = a*(-1 + exp(-X/b));
         dh = BlackLiquor.intCp(X,tC) - BlackLiquor.intCp(X,tref);
         y = hw + hmix + dh;
     end
@@ -23,7 +23,7 @@ classdef BlackLiquor
     end
 
     function y = BPRatm(X)
-        y = 6.173*X-7.48*X*np.sqrt(X)+32.747*X*X;
+        y = 6.173*X-7.48*X*sqrt(X)+32.747*X*X;
     end
 
     function y = BPR(X,P)

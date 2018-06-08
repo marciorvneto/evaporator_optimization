@@ -3,6 +3,7 @@ classdef VaporStream < Stream
     
     properties
         fixedPressure;
+        saturated;
 
         iPressure;
             
@@ -14,6 +15,7 @@ classdef VaporStream < Stream
             obj = obj@Stream('VSTREAM',name,subtype);
             
             obj.fixedPressure = false;
+            obj.saturated = true;
 
             obj.iPressure = -1;
 
@@ -27,8 +29,8 @@ classdef VaporStream < Stream
         function y = numUnknowns(obj)
             y = numUnknowns@Stream(obj) + 1;
         end
-        function y = numKnown(obj)
-            y = numKnown@Stream(obj) + obj.fixedPressure;
+        function y = numEquations(obj)
+            y = numEquations@Stream(obj) + obj.fixedPressure + obj.saturated;
         end
         function y = preallocateVariables(obj,startingIndex)
             startingIndex = preallocateVariables@Stream(obj,startingIndex);
@@ -56,6 +58,9 @@ classdef VaporStream < Stream
             end
             if(obj.fixedPressure)
                 y(end+1) = var(obj.iPressure) - obj.pressure;
+            end
+            if(obj.saturated)
+                y(end+1) = var(obj.iPressure) - Steam.satP(var(obj.iTemperature));
             end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)

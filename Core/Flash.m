@@ -6,8 +6,8 @@ classdef Flash < Block
     end
     
     methods
-        function obj = Flash()
-            obj = obj@Block('FLA');
+        function obj = Flash(name)
+            obj = obj@Block(name);
         end
         
         % ====== Helper ========

@@ -29,7 +29,10 @@ classdef Handler < handle
         function y = numUnknownsBlock(obj,n)
             y = obj.blocks{n}.numUnknowns();
         end
-        function y = numEquations(obj,n)
+        function y = numEquationsStream(obj,n)
+            y = obj.streams{n}.numEquations();
+        end
+        function y = numEquationsBlock(obj,n)
             y = obj.blocks{n}.numEquations();
         end
         % ========== Connectivity ============

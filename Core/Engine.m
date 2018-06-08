@@ -38,7 +38,10 @@ classdef Engine < handle
         function eq = numEquations(obj,handler)
            eq = 0;
            for n = 1:handler.numBlocks()
-              eq = eq + handler.numEquations(n); 
+              eq = eq + handler.numEquationsBlock(n); 
+           end
+           for n = 1:handler.numStreams()
+              eq = eq + handler.numEquationsStream(n); 
            end
         end
         

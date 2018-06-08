@@ -32,8 +32,8 @@ classdef LiquidStream < Stream
         function y = numUnknowns(obj)
             y = numUnknowns@Stream(obj) + 2;
         end
-        function y = numKnown(obj)
-            y = obj.fixedTemperature + obj.fixedFlow + obj.fixedX_Dis + obj.fixedX_Tot;
+        function y = numEquations(obj)
+            y = numEquations@Stream(obj) + obj.fixedX_Dis + obj.fixedX_Tot;
         end
         function y = preallocateVariables(obj,startingIndex)
             startingIndex = preallocateVariables@Stream(obj,startingIndex);

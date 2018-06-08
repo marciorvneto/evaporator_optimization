@@ -6,11 +6,11 @@ classdef VMixer < Block
     end
     
     methods
-        function obj = VMixer()
-            obj = obj@Block('VMX');
+        function obj = VMixer(name)
+            obj = obj@Block(name);
         end
         function y = numEquations(obj)
-            y = 2; 
+            y = 2 + (length(obj.inStreams) - 1); 
         end
         
         function y = vaporOut(obj)
@@ -38,20 +38,26 @@ classdef VMixer < Block
                 currentStream = inStreams{n};
                 Fin(n) = var(currentStream.iFlow);
                 Tin(n) = var(currentStream.iTemperature);
-                Hin(n) = hSatV_T(Tin(n));
+                Hin(n) = Steam.hVSatT(Tin(n));
             end
            
             Fout = var(vaporOut.iFlow);
             Tout = var(vaporOut.iTemperature);
-            Hout =  hSatV_T(Tout);
+            Hout =  Steam.hVSatT(Tout);
             
             % System of equations
             
             y = zeros(obj.numEquations(),1);
             y(1) = Fout - sum(Fin) ;
             y(2) = Fout*Hout - Fin'*Hin;
-            
-            y(2) = 0.001*y(2);
+            for n=2:length(inStreams)
+                stream1 = inStreams{n};
+                stream2 = inStreams{n-1};                
+                P1 = var(stream1.iPressure);
+                P2 = var(stream2.iPressure);
+                y(2+n) = P1 - P2; 
+            end
+
             
         end
         

@@ -15,8 +15,8 @@ classdef Evaporator < Block
     end
 
     methods
-        function obj = Evaporator(U,A)
-            obj = obj@Block('EVA');
+        function obj = Evaporator(U,A,name)
+            obj = obj@Block(name);
             obj.U = U;
             obj.A = A;
             obj.Q = 0;
@@ -55,7 +55,7 @@ classdef Evaporator < Block
             guess(obj.iQ) = obj.Q;
         end
         function y = numEquations(obj)
-            y = 10 + 0*obj.hasFlashFeed();
+            y = 11;
         end
 
         function y = hasFlashFeed(obj)
@@ -151,68 +151,34 @@ classdef Evaporator < Block
             
             PS = var(vaporFeed.iPressure);
             PC = var(condensateOut.iPressure);
+            PV = var(vaporOut.iPressure);
 
             xL_dis = var(liquidOut.iX_dis);
             xL_tot = var(liquidOut.iX_tot);
             xF_dis = var(liquidFeed.iX_dis);
             xF_tot = var(liquidFeed.iX_tot);
-            xC_dis = var(condensateOut.iX_dis);
-            xC_tot = var(condensateOut.iX_tot);
-
-            % Support variables
-
-            Tsat = TL - BPR(xL_dis,TL,1e5);
 
             % Enthalpies
-
-            hF = hLiq(liquidFeed,xF_dis,TF);
-            hL = hLiq(liquidOut,xL_dis,TL);
-            hC = hSatL_T(TS);
-            HS = hSatV_T(TS);
-            HV = hSatV_T(TV);
-
-            if(obj.hasFlashFeed())
-                flashFeed = obj.flashFeed();
-                Flash = var(flashFeed.iFlow);
-                TFlash = var(flashFeed.iTemperature);
-                lambdaTFlash = hSatV_T(TC) - hSatL_T(Tsat);
-            end
+            
+            hF = BlackLiquor.h(xF_dis,TF);
+            hL = BlackLiquor.h(xL_dis,TL);            
+            hC = Steam.hLSatT(TS);            
+            HS = Steam.hVSatT(TS);
+            HV = Steam.hVSatT(TV);
 
             % System of equations
-
+            y = zeros(obj.numEquations(),1);
             y(1) = S - C;
             y(2) = F - V - L;
             y(3) = F*xF_dis - L*xL_dis;
             y(4) = F*xF_tot - L*xL_tot;
             y(5) = PS - PC;
-            y(6) = TV - (satT(PV) + BPR(xL_dis));
-            y(7) = Q - S*(HS - hC);
-            y(8) = Q + F*hF - (V*HV + L*hL);
-            y(9) = TC - satT(PC);
-
-            y = zeros(obj.numEquations(),1);
-            y(1) = TC - TS;
-            y(2) = TV - TL;
-            y(3) = xC_dis;
-            y(4) = xC_tot;
-            y(5) = F - V - L;
-            y(6) = S - C;
-            y(7) = F*xF_dis - L*xL_dis;
-            y(8) = F*xF_tot - L*xL_tot;
-            y(9) = S*lambdaTS - obj.U*obj.A*(TS - TL);
-            y(10) = S*lambdaTS - (V*lambdaTV + L*cp(xF_dis,TF)*(TL - TF));
-%             y(10) = F*hF + S*lambdaTS - (V*HV + L*hL);
-
-            if(obj.hasFlashFeed())
-                y(1) = Flash*hSatV_T(TFlash) + S*hSatV_T(TS) - C*hSatV_T(TC);
-                y(6) = Flash + S - C;
-                y(9) = Flash*lambdaTFlash + S*lambdaTS - obj.U*obj.A*(TC - TL);
-                y(10) = Flash*lambdaTFlash + S*lambdaTS - (V*lambdaTV + L*cp(xF_dis,TF)*(TL - TF));
-%                 y(11) = TFlash - TS;
-            end
-
-            y(9) = 0.001 * y(9);
-            y(10) = 0.001 * y(10);
+            y(6) = TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000));
+            y(7) = TV - TL;
+            y(8) = Q - S*(HS - hC);
+            y(9) = Q - obj.U*A*(TS-TL);
+            y(10) = Q + F*hF - (V*HV + L*hL);
+            y(11) = TC - Steam.satT(PC/1000);
 
         end
 
