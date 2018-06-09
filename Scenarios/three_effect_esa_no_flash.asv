@@ -26,11 +26,6 @@ C1 = CondensateStream('C1','COND');
 C2 = CondensateStream('C2','COND');
 C3 = CondensateStream('C3','COND');
 
-F1 = Flash('F1');
-VMIX = VMixer('VMIX');
-VMixOut = VaporStream('VMixOut','VAPO');
-VFlash = VaporStream('VFlash','VAPO');
-LFlash = CondensateStream('LFlash','BLIQ');
 
 %% Input data
 
@@ -79,13 +74,6 @@ handler.addStream(C1);
 handler.addStream(C2);
 handler.addStream(C3);
 
-% Flash
-
-handler.addStream(VMixOut);
-handler.addBlock(VMIX);
-handler.addBlock(F1);
-handler.addStream(VFlash);
-handler.addStream(LFlash);
 
 %% Connectivity
 
@@ -93,8 +81,7 @@ handler.addStream(LFlash);
 
 handler.connectInStream(E1,V0);
 handler.connectBlocks(E1,E2,V1);
-handler.connectBlocks(E2,VMIX,V2);
-handler.connectBlocks(VMIX,E3,VMixOut);
+handler.connectBlocks(E2,E3,V2);
 handler.connectOutStream(E3,V3);
 
 % Black Liquor
@@ -110,11 +97,6 @@ handler.connectOutStream(E1,C1);
 handler.connectOutStream(E2,C2);
 handler.connectOutStream(E3,C3);
 
-% Flash
-
-handler.connectInStream(F1,C2);
-handler.connectBlocks(F1,VMIX,VFlash);
-handler.connectOutStream(F1,LFlash);
 
 %% Engine setup
 

@@ -8,6 +8,7 @@ classdef Engine < handle
         flowBounds;
         x_disBounds;
         x_totBounds;
+        pressureBounds;
         QBounds;
         ABounds;        
     end
@@ -15,12 +16,13 @@ classdef Engine < handle
     methods
         function obj = Engine(handler)
            obj.handler = handler;
-           obj.temperatureBounds = [100,600];
+           obj.temperatureBounds = [273.15,600];
+           obj.pressureBounds = [0,1000];
            obj.flowBounds = [0,100];
            obj.x_disBounds = [0,1];
            obj.x_totBounds = [0,1];
            obj.QBounds = [0 1e6];
-           obj.ABounds = [0 1e6];
+           obj.ABounds = [0 1e5];
         end
         
         function u = numUnknowns(obj,handler)
@@ -36,7 +38,10 @@ classdef Engine < handle
         function eq = numEquations(obj,handler)
            eq = 0;
            for n = 1:handler.numBlocks()
-              eq = eq + handler.numEquations(n); 
+              eq = eq + handler.numEquationsBlock(n); 
+           end
+           for n = 1:handler.numStreams()
+              eq = eq + handler.numEquationsStream(n); 
            end
         end
         
@@ -81,6 +86,10 @@ classdef Engine < handle
             for n = 1:handler.numStreams()
                 currentStream = handler.getStream(n);
                 currentStream.fetchVariables(result);
+            end
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                currentBlock.fetchVariables(result);
             end
         end
         
@@ -131,11 +140,12 @@ classdef Engine < handle
         
         % =========== Math ====================
         
-        function obj = run(obj)
+        function obj = run(obj,x0)
            solved = false;
-           consistent = false;
-           obj.preallocateVariables(obj.handler);
-           initialGuess = obj.transportInitialGuesses(obj.handler);
+           consistent = true;
+%            obj.preallocateVariables(obj.handler);
+%            initialGuess = obj.transportInitialGuesses(obj.handler);
+            initialGuess = x0;
            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
 %            consistency = @(x) obj.consistencyCheck(x,obj.handler);
 %            hardSolver = BBSolve(1e-5);
@@ -217,30 +227,11 @@ classdef Engine < handle
             ub = zeros(obj.numUnknowns(handler),1);
             for n = 1:handler.numStreams()
                 currentStream = handler.getStream(n);
-                iFlow = currentStream.iFlow;
-                iTemperature = currentStream.iTemperature;
-                lb(iFlow) = obj.flowBounds(1);
-                ub(iFlow) = obj.flowBounds(2);
-                lb(iTemperature) = obj.temperatureBounds(1);
-                ub(iTemperature) = obj.temperatureBounds(2);
-                if(strcmp(currentStream.type,'LSTREAM'))
-                    iX_dis = currentStream.iX_dis;
-                    iX_tot = currentStream.iX_tot;
-                    lb(iX_dis) = obj.x_disBounds(1);
-                    ub(iX_dis) = obj.x_disBounds(2);
-                    lb(iX_tot) = obj.x_totBounds(1);
-                    ub(iX_tot) = obj.x_totBounds(2);
-                end
+                [lb,ub] = currentStream.getBounds(obj,lb,ub);
             end
             for n = 1:handler.numBlocks()
                 currentBlock = handler.getBlock(n);
-                if(strcmp(currentBlock.type,'EVAP
-                iQ = currentBlock.iQ;
-                iA = currentStream.iA;
-                lb(iQ) = obj.QBounds(1);
-                ub(iQ) = obj.QBounds(2);
-                lb(iA) = obj.ABounds(1);
-                ub(iA) = obj.ABounds(2);
+                [lb,ub] = currentBlock.getBounds(obj,lb,ub);
             end
         end
         

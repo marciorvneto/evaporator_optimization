@@ -16,13 +16,13 @@ classdef Engine < handle
     methods
         function obj = Engine(handler)
            obj.handler = handler;
-           obj.temperatureBounds = [100,600];
+           obj.temperatureBounds = [273.15,600];
            obj.pressureBounds = [0,1000];
            obj.flowBounds = [0,100];
            obj.x_disBounds = [0,1];
            obj.x_totBounds = [0,1];
            obj.QBounds = [0 1e6];
-           obj.ABounds = [0 1e6];
+           obj.ABounds = [0 1e5];
         end
         
         function u = numUnknowns(obj,handler)
@@ -140,11 +140,12 @@ classdef Engine < handle
         
         % =========== Math ====================
         
-        function obj = run(obj)
+        function obj = run(obj,x0)
            solved = false;
-           consistent = false;
-           obj.preallocateVariables(obj.handler);
-           initialGuess = obj.transportInitialGuesses(obj.handler);
+           consistent = true;
+%            obj.preallocateVariables(obj.handler);
+%            initialGuess = obj.transportInitialGuesses(obj.handler);
+            initialGuess = x0;
            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
 %            consistency = @(x) obj.consistencyCheck(x,obj.handler);
 %            hardSolver = BBSolve(1e-5);

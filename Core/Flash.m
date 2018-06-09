@@ -73,10 +73,10 @@ classdef Flash < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = F - L - V ;
+            y(1) = (F - L - V)/10;
             y(2) = (TV - TL)/100;
             y(3) = (F*hF - (L*hL + V*HV))/1000;
-            y(4) = (TV - Steam.satT(PV))/100;
+            y(4) = (TV - Steam.satT(PV/1000))/100;
 
             
           

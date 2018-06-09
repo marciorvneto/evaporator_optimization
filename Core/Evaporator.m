@@ -12,6 +12,7 @@ classdef Evaporator < Block
 
         fixedA = false;
         fixedQ = false;
+        areaEqualTo = -1;
     end
 
     methods
@@ -39,7 +40,7 @@ classdef Evaporator < Block
         end
         
         function y = numEquations(obj)
-            y = 11 + obj.fixedA + obj.fixedQ;
+            y = 11 + obj.fixedA + obj.fixedQ + (obj.areaEqualTo ~= -1);
         end
 
         function y = preallocateVariables(obj,startingIndex)
@@ -139,8 +140,8 @@ classdef Evaporator < Block
             S = var(vaporFeed.iFlow);
             C = var(condensateOut.iFlow);
 
-            Q = var(obj.iQ);
-            A = var(obj.iA);
+            QQ = var(obj.iQ);
+            AA = var(obj.iA);
 
             TF = var(liquidFeed.iTemperature);
             TS = var(vaporFeed.iTemperature);
@@ -167,17 +168,20 @@ classdef Evaporator < Block
 
             % System of equations
             y = zeros(obj.numEquations(),1);
-            y(1) = S - C;
-            y(2) = F - V - L;
-            y(3) = F*xF_dis - L*xL_dis;
-            y(4) = F*xF_tot - L*xL_tot;
+            y(1) = (S - C)/10;
+            y(2) = (F - V - L)/10;
+            y(3) = (F*xF_dis - L*xL_dis)/10;
+            y(4) = (F*xF_tot - L*xL_tot)/10;
             y(5) = (PS - PC)/100;
             y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)))/100;
+%             y(6) = (TV - (Steam.satT(PV/1000)))/100;
             y(7) = (TV - TL)/100;
-            y(8) = (Q - S*(HS - hC))/1000;
-            y(9) = (Q - obj.U*A*(TS-TL))/1000;
-            y(10) = (Q + F*hF - (V*HV + L*hL))/1000;
+            y(8) = (QQ - S*(HS - hC))/1000;
+            y(9) = (QQ - obj.U*AA*(TS-TL))/1000;
+            y(10) = (QQ + F*hF - (V*HV + L*hL))/1000;
             y(11) = (TC - Steam.satT(PC/1000))/100;
+%             y(11) = (TC - TS)/1;
+            
             
             count = 12;
             if(obj.fixedA)
@@ -187,6 +191,11 @@ classdef Evaporator < Block
             if(obj.fixedQ)
                 y(count) = (obj.Q - var(obj.iQ))/1000;
                 count = count + 1;
+            end
+            if (obj.areaEqualTo ~= -1)
+               otherEvap = obj.areaEqualTo;
+               y(count) = (var(obj.iA) - var(otherEvap.iA))/1000;
+               count = count + 1;
             end
 
         end

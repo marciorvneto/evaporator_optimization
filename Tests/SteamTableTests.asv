@@ -25,9 +25,10 @@ classdef SteamTableTests < matlab.unittest.TestCase
             testCase.verifyGreaterThan(Steam.hVSatP(1),Steam.hLSatP(1));
         end
         function steamEnthalpies(testCase)            
-            testCase.verifyLessThan(abs(Steam.hV(300,0.0035)-0.254991145e4),1e-6);
-            testCase.verifyLessThan(abs(Steam.hV(700,0.0035)-0.333568375e4),1e-6);
-            testCase.verifyLessThan(abs(Steam.hV(700,30)-0.263149474e4),1e-6);
+            testCase.verifyLessThan(abs(Steam.hV(300,0.0035)-),1e-6);
+            testCase.verifyGreaterThan(Steam.hVSatT(300),Steam.hLSatT(300));
+            testCase.verifyGreaterThan(Steam.hVSatP(1),0);
+            testCase.verifyGreaterThan(Steam.hVSatP(1),Steam.hLSatP(1));
         end
     end
     

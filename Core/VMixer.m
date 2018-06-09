@@ -48,7 +48,7 @@ classdef VMixer < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = Fout - sum(Fin);
+            y(1) = (Fout - sum(Fin))/10;
             y(2) = (Fout*Hout - Fin'*Hin)/1000;
             y(3) = (var(inStreams{1}.iPressure) - var(vaporOut.iPressure))/100;
             for n=2:length(inStreams)
