@@ -48,8 +48,8 @@ L3.fixedFlow = true;
 L0.x_dis = 0.5;
 L0.fixedX_Dis = true;
 
-V1.temperature = 60 + 273.16;
-V1.fixedTemperature = true;
+V3.temperature = 60 + 273.16;
+V3.fixedTemperature = true;
 % V1.saturated = true;
 
 %% Simulator setup
@@ -111,7 +111,7 @@ opts = [];
 opts.LBounds = lb;
 opts.UBounds = ub;
 opts.Restarts = 0;
-opts.PopSize = 500;
+opts.PopSize = 150;
 opts.LogPlot = true;
 
 [XMIN, FMIN, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('fobj', (lb+ub)/2, 0.5*(ub-lb),opts,engine);
