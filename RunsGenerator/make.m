@@ -16,7 +16,7 @@ identifier = 'DE_3_effect_flash';
 maxIterations = 1e6;
 
 minimumF = 0.25;
-maximumF = 1.00;
+maximumF = 0.75;
 pointsF = 3;
 
 minimumNpop = 200;
