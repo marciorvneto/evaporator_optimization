@@ -31,7 +31,7 @@ numberTrials = 5;
 
 logEveryXIterations = 10;
 
-nCores = feature('numcores');
+% nCores = feature('numcores');
 
 %% Generate all possible combinations
 
@@ -52,6 +52,7 @@ mkdir(pathToFolder);
 
 %% Create a parpool and spawn threads
 
+nCores = 12;
 pool = parpool(nCores);
 
 parfor i=1:numScenarios

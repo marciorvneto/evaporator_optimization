@@ -124,12 +124,3 @@ engine.preallocateVariables(engine.handler);
 [lb,ub] = engine.getBounds(engine.handler);
 
 fun = @(x) engine.evaluateBalances(x,engine.handler);
-% 
-% opts = [];
-% opts.LBounds = lb;
-% opts.UBounds = ub;
-% opts.Restarts = 0;
-% opts.PopSize = 150;
-% opts.LogPlot = true;
-% 
-% [XMIN, FMIN, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('fobj', (lb+ub)/2, 0.5*(ub-lb),opts,engine);
