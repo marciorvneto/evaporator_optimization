@@ -172,7 +172,7 @@ classdef Evaporator < Block
             y(2) = (F - V - L)/10;
             y(3) = (F*xF_dis - L*xL_dis)/10;
             y(4) = (F*xF_tot - L*xL_tot)/10;
-            y(5) = (PS - PC)/100;
+            y(5) = (PS - PC)/1000;
             y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)))/100;
 %             y(6) = (TV - (Steam.satT(PV/1000)))/100;
             y(7) = (TV - TL)/100;
@@ -185,7 +185,7 @@ classdef Evaporator < Block
             
             count = 12;
             if(obj.fixedA)
-                y(count) = (obj.A - var(obj.iA))/1000;
+                y(count) = (obj.A - var(obj.iA))/1;
                 count = count + 1;
             end
             if(obj.fixedQ)

@@ -129,7 +129,7 @@ opts = [];
 opts.LBounds = lb;
 opts.UBounds = ub;
 opts.Restarts = 0;
-opts.PopSize = 500;
+opts.PopSize = 150;
 opts.LogPlot = true;
 
 [XMIN, FMIN, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('fobj', (lb+ub)/2, 0.5*(ub-lb),opts,engine);
