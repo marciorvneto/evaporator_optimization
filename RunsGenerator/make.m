@@ -46,7 +46,7 @@ numScenarios = size(scenarios,1);
 %% Create results folder
 
 folderName = [identifier,'_',datestr(now,'mm_dd_yy')];
-pathToFolder = ['../Results/',folderName];
+pathToFolder = ['./Results/',folderName];
 mkdir(pathToFolder);
 
 
@@ -65,6 +65,7 @@ parfor i=1:numScenarios
     fileName = ['Npop_',num2str(Npop),'_F_',num2str(F),'_CR_',num2str(CR),'_Trial_',num2str(trial)];
     filePath = [pathToFolder,'/',fileName,'.result'];
     file = fopen(filePath,'w');
+    fprintf(file,'Running on %d cores\n',nCores);
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
