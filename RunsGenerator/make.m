@@ -49,6 +49,8 @@ folderName = [identifier,'_',datestr(now,'mm_dd_yy')];
 pathToFolder = ['./Results/',folderName];
 mkdir(pathToFolder);
 
+copyfile('makeGraphs.m', [pathToFolder,'/makeGraphs.m']);
+copyfile('parseResults.m', [pathToFolder,'/parseResults.m']);
 
 %% Create a parpool and spawn threads
 
