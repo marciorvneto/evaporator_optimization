@@ -66,7 +66,7 @@ classdef Flash < Block
             
             % Enthalpies
             
-            hL = Steam.hLSatT(TL);
+            hL = Steam.hLSatT(TV);
             hF = Steam.hLSatT(TF);
             HV = Steam.hVSatT(TV);
             
@@ -76,7 +76,7 @@ classdef Flash < Block
             y(1) = (F - L - V)/10;
             y(2) = (TV - TL)/100;
             y(3) = (F*hF - (L*hL + V*HV))/1000;
-            y(4) = (TV - Steam.satT(PV/1000))/100;
+            y(4) = (PV/1000 - Steam.satP(TV))/1;
 
             
           

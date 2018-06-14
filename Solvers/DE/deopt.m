@@ -289,6 +289,13 @@ while ((I_iter < I_itermax) & (S_bestval.FVr_oa(1) > F_VTR))
 
   if (I_refresh > 0)
      if ((rem(I_iter,I_refresh) == 0) | I_iter == 1)
+        %MY ADDITIONS
+        fprintf(S_struct.file,'%d\t%d\t%f\t',I_iter,I_nfeval,S_bestval.FVr_oa(1));
+        for n=1:I_D
+          fprintf(S_struct.file,'%f\t',FVr_bestmem(n));
+        end
+       fprintf(S_struct.file,'\n');
+        
        fprintf(1,'Iteration: %d,  Best: %f,  F_weight: %f,  F_CR: %f,  I_NP: %d\n',I_iter,S_bestval.FVr_oa(1),F_weight,F_CR,I_NP);
        %var(FM_pop)
        format long e;

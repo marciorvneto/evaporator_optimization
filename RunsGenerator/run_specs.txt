@@ -1,0 +1,15 @@
+Title: three_effect_esa
+Author: Márcio Neto
+Scenario path: ../Scenarios/three_effect_esa.m
+
+MinimumF: 0.25
+MaximumF: 1.00
+PointsF: 3
+
+MinimumNpop: 200
+MaximumNpop: 450
+PointsNpop: 2
+
+NumberTrials: 5
+
+LogEveryXIterations: 100
