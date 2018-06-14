@@ -15,12 +15,12 @@ identifier = 'DE_3_effect_flash';
 
 maxIterations = 1e6;
 
-minimumF = 0.25;
-maximumF = 0.75;
+minimumF = 0.8;
+maximumF = 0.9;
 pointsF = 3;
 
-minimumNpop = 200;
-maximumNpop = 450;
+minimumNpop = 350;
+maximumNpop = 600;
 pointsNpop = 2;
 
 minimumCR = 0.9;
@@ -59,12 +59,12 @@ pool = parpool(nCores);
 
 parfor i=1:numScenarios
     S_struct = struct;
-    
+
     F = scenarios(i,1);
     Npop = scenarios(i,2);
     CR = scenarios(i,3);
     trial = scenarios(i,4);
-    
+
     fileName = ['Npop_',num2str(Npop),'_F_',num2str(F),'_CR_',num2str(CR),'_Trial_',num2str(trial)];
     filePath = [pathToFolder,'/',fileName,'.result'];
     file = fopen(filePath,'w');
@@ -72,21 +72,21 @@ parfor i=1:numScenarios
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
-    
-    
+
+
     F_VTR = 1e-10;
     I_D = length(lb);
-    FVr_minbound = lb'; 
-    FVr_maxbound = ub'; 
+    FVr_minbound = lb';
+    FVr_maxbound = ub';
     I_bnd_constr = 1;
-    I_NP = Npop; 
-	I_itermax = maxIterations; 
-	F_weight = F; 
+    I_NP = Npop;
+	I_itermax = maxIterations;
+	F_weight = F;
 	F_CR = CR;
     I_strategy = 1;
     I_refresh = logEveryXIterations;
     I_plotting = 0;
-    
+
     S_struct.I_NP         = I_NP;
     S_struct.F_weight     = F_weight;
     S_struct.F_CR         = F_CR;
@@ -99,18 +99,15 @@ parfor i=1:numScenarios
     S_struct.I_strategy   = I_strategy;
     S_struct.I_refresh    = I_refresh;
     S_struct.I_plotting   = I_plotting;
-    
+
     S_struct.engine = engine;
     S_struct.file = file;
-    
+
     [FVr_x,S_y,I_nf] = deopt('fobj_de',S_struct);
-   
-   
+
+
     fclose(file);
-    
+
 end
 
 delete(pool);
-
-
-
