@@ -119,6 +119,9 @@ handler.connectOutStream(F1,LFlash);
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
-engine.QBounds = []
+engine.QBounds = [7.32e3,73.2e3];
+engine.ABounds = [458,7320];
+
+[lb,ub] = engine.getBounds(engine.handler);
 
 fun = @(x) engine.evaluateBalances(x,engine.handler);

@@ -8,12 +8,12 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'three_effect_esa_taylored_bounds.m';
+scenarioName = 'three_effect_esa_improved_bounds.m';
 run(scenarioName);
 
 
 
-identifier = 'DE_3_effect_flash_taylored_bounds';
+identifier = 'DE_3_effect_flash_improved_bounds';
 
 maxIterations = 1e6;
 
@@ -29,7 +29,7 @@ minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 1;
+numberTrials = 5;
 
 logEveryXIterations = 10;
 
@@ -75,6 +75,16 @@ parfor i=1:numScenarios
     fprintf(file,'Running on %d cores\n',nCores);
     fprintf(file,'Npop\tF\tCR\tTrial\n');
     fprintf(file,'%d\t%f\t%f\t%d\n',Npop,F,CR,trial);
+    fprintf(file,'Lower bounds\n');
+    for n=1:(length(lb)-1)
+        fprintf(file,'%f\t',lb(n));
+    end
+    fprintf(file,'\n');
+    fprintf(file,'Upper bounds\n');
+    for n=1:(length(ub)-1)
+        fprintf(file,'%f\t',ub(n));
+    end
+    fprintf(file,'\n');
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
