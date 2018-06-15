@@ -8,10 +8,12 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'three_effect_esa.m';
+scenarioName = 'three_effect_esa_taylored_bounds.m';
 run(scenarioName);
 
-identifier = 'DE_3_effect_flash';
+
+
+identifier = 'DE_3_effect_flash_taylored_bounds';
 
 maxIterations = 1e6;
 
@@ -52,9 +54,11 @@ mkdir(pathToFolder);
 copyfile('makeGraphs.m', [pathToFolder,'/makeGraphs.m']);
 copyfile('parseResults.m', [pathToFolder,'/parseResults.m']);
 
+copyfile(['../Scenarios/',scenarioName],[pathToFolder,'/',scenarioName])
+
 %% Create a parpool and spawn threads
 
-nCores = 12;
+nCores = 2;
 pool = parpool(nCores);
 
 parfor i=1:numScenarios
@@ -69,6 +73,8 @@ parfor i=1:numScenarios
     filePath = [pathToFolder,'/',fileName,'.result'];
     file = fopen(filePath,'w');
     fprintf(file,'Running on %d cores\n',nCores);
+    fprintf(file,'Npop\tF\tCR\tTrial\n');
+    fprintf(file,'%d\t%f\t%f\t%d\n',Npop,F,CR,trial);
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');

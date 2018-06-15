@@ -119,19 +119,10 @@ handler.connectOutStream(F1,LFlash);
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
-[lb,ub] = engine.getBounds(engine.handler);
+xCMAES = [3.931600e+02	1.291179e+01	1.987283e+02	3.658396e+02	1.136251e+01	5.751884e+01	3.471837e+02	1.009098e+01	3.226259e+01	3.331600e+02	8.546535e+00	1.828341e+01	3.658396e+02	1.999998e+01	5.000004e-01	5.000001e-01	3.471837e+02	3.136249e+01	3.188522e-01	3.188520e-01	3.331600e+02	4.145346e+01	2.412343e-01	2.412342e-01	3.131600e+02	5.000000e+01	2.000000e-01	1.999999e-01	3.931600e+02	1.291179e+01	1.987283e+02	3.579959e+02	1.136251e+01	5.751877e+01	3.439258e+02	1.037637e+01	3.226248e+01	3.470963e+02	1.037637e+01	3.226254e+01	3.439259e+02	2.853953e-01	3.226257e+01	3.439259e+02	1.107711e+01	7.948367e+02	8.715090e+02	2.857201e+04	8.715089e+02	2.601402e+04	8.715091e+02	2.429130e+04
+]';
 
-Fbound = 50;
-Lbound = 50*0.2/0.5;
-Vbound = Fbound - Lbound;
-qTotLowerBound = Lbound*BlackLiquor.h(L0.x_dis,L3.temperature) + Vbound*Steam.hVSatT(V3.temperature) -Fbound*BlackLiquor.h(L3.x_dis,L3.temperature);
-qEachMin = 0.1*qTotLowerBound/3;
-qEachMax = 10*qTotLowerBound/3;
-
-% AMin = qEachMax / max([E1.U,E2.U,E3.U]) / ();
-% AMax = qEachMin / min([E1.U,E2.U,E3.U]);
-
-% engine.ABounds = [AMin, AMax];
-engine.QBounds = [qEachMin,qEachMax];
+lb = xCMAES * 0.9;
+ub = xCMAES * 1.1;
 
 fun = @(x) engine.evaluateBalances(x,engine.handler);
