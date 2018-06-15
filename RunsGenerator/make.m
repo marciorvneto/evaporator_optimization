@@ -29,7 +29,7 @@ minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 5;
+numberTrials = 1;
 
 logEveryXIterations = 10;
 
