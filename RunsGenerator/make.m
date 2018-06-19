@@ -8,9 +8,8 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'three_effect_esa_improved_bounds.m';
+scenarioName = 'three_effect_esa_improved_bounds_scen.m';
 run(scenarioName);
-
 
 
 identifier = 'DE_3_effect_flash_improved_bounds';
@@ -54,7 +53,14 @@ mkdir(pathToFolder);
 copyfile('makeGraphs.m', [pathToFolder,'/makeGraphs.m']);
 copyfile('parseResults.m', [pathToFolder,'/parseResults.m']);
 
+copyfile('fminconGraphs.m', [pathToFolder,'/fminconGraphs.m']);
+copyfile('runFmincon.m', [pathToFolder,'/runFmincon.m']);
+
 copyfile(['../Scenarios/',scenarioName],[pathToFolder,'/',scenarioName])
+
+f = fopen([folderName,'/path.txt'],'w');
+fprintf(f,[]);
+fclose(f);
 
 %% Create a parpool and spawn threads
 
