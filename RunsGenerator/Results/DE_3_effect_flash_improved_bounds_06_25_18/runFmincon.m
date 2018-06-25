@@ -1,4 +1,4 @@
-function [GEN,FOBJ,FDE] = runFmincon(fileName,everyXGenerations,scenario,foutName)
+function [GEN,FOBJ,FDE] = runFmincon(fileName,everyXGenerations,scenario)
 
 f = fopen(fileName,'r');
 
@@ -22,42 +22,26 @@ FDE = [];
 
 count = 0;
 
-
-fout = fopen(foutName,'w');
-
-
 while ischar(line)
     if rem(count,everyXGenerations / 10) ~= 0
         line = fgetl(f);
         count = count + 1;
         continue
-    end
+    end        
     s = strsplit(line,'\t');
-    if str2double(s(3)) > 1e-2
-        line = fgetl(f);
-        count = count + 1;
-        continue
-    end
-    
     disp(s(1))
     x0 = str2double(s(4:end-1));
-    options = psoptimset('Display','iter');
-%     options = optimoptions('fminunc','Algorithm','quasi-newton','Display','iter','MaxFunctionEvaluations',3);
-%     [x,fval] = patternsearch(fobj,x0,options);
-    [x,fval] = patternsearch(fobj,x0,[],[],[],[],[],[],[],options);
-    
-    fprintf(fout,'%f\t%f\t%f\n',str2double(s(1)),fval,str2double(s(3)));
+    options = optimoptions('fminunc','Algorithm','quasi-newton','Display','iter');
+    [x,fval] = fminunc(fobj,x0,options);
     
     GEN = [GEN str2double(s(1))];
     FOBJ = [FOBJ fval];
     FDE = [FDE, str2double(s(3))];
-    
-    
 
     line = fgetl(f);
     count = count + 1;
 end
-fclose(fout);
+
 fclose(f);
 
 end

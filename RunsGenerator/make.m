@@ -16,19 +16,19 @@ identifier = 'DE_3_effect_flash_improved_bounds';
 
 maxIterations = 1e6;
 
-minimumF = 0.25;
-maximumF = 0.75;
+minimumF = 0.3;
+maximumF = 0.7;
 pointsF = 3;
 
-minimumNpop = 200;
-maximumNpop = 450;
+minimumNpop = 4*52;
+maximumNpop = 8*52;
 pointsNpop = 2;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 5;
+numberTrials = 3;
 
 logEveryXIterations = 10;
 
@@ -58,9 +58,6 @@ copyfile('runFmincon.m', [pathToFolder,'/runFmincon.m']);
 
 copyfile(['../Scenarios/',scenarioName],[pathToFolder,'/',scenarioName])
 
-f = fopen([folderName,'/path.txt'],'w');
-fprintf(f,[]);
-fclose(f);
 
 %% Create a parpool and spawn threads
 
@@ -68,6 +65,7 @@ nCores = 2;
 pool = parpool(nCores);
 
 parfor i=1:numScenarios
+    
     S_struct = struct;
     
     F = scenarios(i,1);
@@ -80,23 +78,27 @@ parfor i=1:numScenarios
     file = fopen(filePath,'w');
     fprintf(file,'Running on %d cores\n',nCores);
     fprintf(file,'Npop\tF\tCR\tTrial\n');
-    fprintf(file,'%d\t%f\t%f\t%d\n',Npop,F,CR,trial);
+    fprintf(file,'%d\t%e\t%e\t%d\n',Npop,F,CR,trial);
     fprintf(file,'Lower bounds\n');
     for n=1:(length(lb)-1)
-        fprintf(file,'%f\t',lb(n));
+        fprintf(file,'%e\t',lb(n));
     end
     fprintf(file,'\n');
     fprintf(file,'Upper bounds\n');
     for n=1:(length(ub)-1)
-        fprintf(file,'%f\t',ub(n));
+        fprintf(file,'%e\t',ub(n));
     end
     fprintf(file,'\n');
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
     
+    %% Edit
     
-    F_VTR = 1e-10;
+    maxIterations = 5e7/Npop;
+    
+    
+    F_VTR = 1e-8;
     I_D = length(lb);
     FVr_minbound = lb'; 
     FVr_maxbound = ub'; 

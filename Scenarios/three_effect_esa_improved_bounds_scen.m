@@ -121,6 +121,8 @@ engine.preallocateVariables(engine.handler);
 
 engine.QBounds = [7.32e3,73.2e3];
 engine.ABounds = [458,7320];
+engine.x_disBounds = [0.2,0.5];
+engine.x_totBounds = [0.2,0.5];
 
 [lb,ub] = engine.getBounds(engine.handler);
 
