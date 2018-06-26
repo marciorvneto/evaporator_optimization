@@ -16,13 +16,13 @@ identifier = 'DE_3_effect_flash_improved_bounds';
 
 maxIterations = 1e6;
 
-minimumF = 0.3;
-maximumF = 0.7;
+minimumF = 0.4;
+maximumF = 0.6;
 pointsF = 3;
 
-minimumNpop = 4*52;
-maximumNpop = 8*52;
-pointsNpop = 2;
+minimumNpop = 3*52;
+maximumNpop = 5*52;
+pointsNpop = 3;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
@@ -30,7 +30,7 @@ pointsCR = 1;
 
 numberTrials = 3;
 
-logEveryXIterations = 10;
+logEveryXIterations = 100;
 
 % nCores = feature('numcores');
 
