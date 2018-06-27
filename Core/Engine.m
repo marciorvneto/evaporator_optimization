@@ -139,29 +139,20 @@ classdef Engine < handle
         end
         
         % =========== Math ====================
+%         
+%         function obj = run(obj,x0)
+%            solved = false;
+%            initialGuess = x0;
+%            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
+%            [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
+%            obj.returnVariables(obj.handler,xResult);
+%            obj.generateReport(xResult,obj.handler);
+%         end
         
-        function obj = run(obj,x0)
-           solved = false;
-           consistent = true;
-%            obj.preallocateVariables(obj.handler);
-%            initialGuess = obj.transportInitialGuesses(obj.handler);
-            initialGuess = x0;
+        function [xResult,solved] = run(obj,x0)
+           initialGuess = x0;
            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
-%            consistency = @(x) obj.consistencyCheck(x,obj.handler);
-%            hardSolver = BBSolve(1e-5);
-%            hardSolver.extraCriteria = consistency;
-%            [lb,ub] = obj.getBounds(obj.handler);
-%            domain = Node(lb,ub);
-%            [Aeq,beq] = obj.linearConstraints(obj.handler);
-%            [xResult,ok] = hardSolver.solve(solFcn,obj.numUnknowns(obj.handler),domain,Aeq,beq);
-%            result = solveHomotopy(solFcn,obj.numUnknowns(obj.handler),initialGuess,1e-6);
-           while(~solved || ~consistent)
-                [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);
-                consistent = obj.consistencyCheck(xResult,obj.handler);
-                initialGuess = obj.randomGuess(obj.handler);
-           end
-           obj.returnVariables(obj.handler,xResult);
-           obj.generateReport(xResult,obj.handler);
+           [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
         end
         
         function y = evaluateBalances(obj,var,handler)

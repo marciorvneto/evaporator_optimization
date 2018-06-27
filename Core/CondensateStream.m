@@ -50,7 +50,7 @@ classdef CondensateStream < Stream
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
             if(obj.fixedPressure)
-                y(end+1) = (var(obj.iPressure) - obj.pressure)/1000;
+                y(end+1) = (var(obj.iPressure) - obj.pressure);
             end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)

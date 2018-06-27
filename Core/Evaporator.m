@@ -165,21 +165,23 @@ classdef Evaporator < Block
             hC = Steam.hLSatT(TS);            
             HS = Steam.hVSatT(TS);
             HV = Steam.hVSatT(TV);
+            
+            assert(HS > hC)
 
             % System of equations
             y = zeros(obj.numEquations(),1);
-            y(1) = (S - C)/10;
-            y(2) = (F - V - L)/10;
-            y(3) = (F*xF_dis - L*xL_dis)/10;
-            y(4) = (F*xF_tot - L*xL_tot)/10;
-            y(5) = (PS - PC)/1000;
-            y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)))/100;
+            y(1) = (S - C);
+            y(2) = (F - V - L);
+            y(3) = (F*xF_dis - L*xL_dis);
+            y(4) = (F*xF_tot - L*xL_tot);
+            y(5) = (PS - PC);
+            y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)));
 %             y(6) = (TV - (Steam.satT(PV/1000)))/100;
-            y(7) = (TV - TL)/100;
-            y(8) = (QQ - S*(HS - hC))/1000;
-            y(9) = (QQ - obj.U*AA*(TS-TL))/1000;
-            y(10) = (QQ + F*hF - (V*HV + L*hL))/1000;
-            y(11) = (TC - Steam.satT(PC/1000))/100;
+            y(7) = (TV - TL);
+            y(8) = (QQ - S*(HS - hC));
+            y(9) = (QQ - obj.U*AA*(TS-TL));
+            y(10) = (QQ + F*hF - (V*HV + L*hL));
+            y(11) = (TC - Steam.satT(PC/1000));
 %             y(11) = (TC - TS)/1;
             
             
@@ -189,12 +191,12 @@ classdef Evaporator < Block
                 count = count + 1;
             end
             if(obj.fixedQ)
-                y(count) = (obj.Q - var(obj.iQ))/1000;
+                y(count) = (obj.Q - var(obj.iQ));
                 count = count + 1;
             end
             if (obj.areaEqualTo ~= -1)
                otherEvap = obj.areaEqualTo;
-               y(count) = (var(obj.iA) - var(otherEvap.iA))/1000;
+               y(count) = (var(obj.iA) - var(otherEvap.iA));
                count = count + 1;
             end
 

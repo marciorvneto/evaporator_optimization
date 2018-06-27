@@ -62,6 +62,7 @@ classdef Flash < Block
             TL = var(liquidOut.iTemperature);
             
             PV = var(vaporOut.iPressure);
+            PL = var(liquidOut.iPressure);
            
             
             % Enthalpies
@@ -73,10 +74,11 @@ classdef Flash < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = (F - L - V)/10;
-            y(2) = (TV - TL)/100;
-            y(3) = (F*hF - (L*hL + V*HV))/1000;
-            y(4) = (PV/1000 - Steam.satP(TV))/1;
+            y(1) = (F - L - V);
+            y(2) = (TV - TL);
+            y(3) = (F*hF - (L*hL + V*HV));
+            y(4) = (PV/1000 - Steam.satP(TV));
+            y(5) = (PL/1000 - Steam.satP(TV));
 
             
           

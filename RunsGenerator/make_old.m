@@ -20,17 +20,17 @@ minimumF = 0.4;
 maximumF = 0.6;
 pointsF = 3;
 
-minimumNpop = 10;
-maximumNpop = 10;
+minimumNpop = 3*52;
+maximumNpop = 5*52;
 pointsNpop = 3;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 1;
+numberTrials = 3;
 
-logEveryXIterations = 1;
+logEveryXIterations = 100;
 
 % nCores = feature('numcores');
 
