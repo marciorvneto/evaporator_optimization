@@ -54,10 +54,10 @@ classdef Stream < handle
         function y = evaluate(obj,var)
             y = [];
             if(obj.fixedFlow)
-                y(end+1) = (var(obj.iFlow) - obj.flow)/10;
+                y(end+1) = (var(obj.iFlow) - obj.flow);
             end
             if(obj.fixedTemperature)
-                y(end+1) = (var(obj.iTemperature) - obj.temperature)/100;
+                y(end+1) = (var(obj.iTemperature) - obj.temperature);
             end
         end
         function y = numUnknowns(obj)

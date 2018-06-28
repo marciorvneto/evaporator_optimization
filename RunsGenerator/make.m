@@ -12,7 +12,7 @@ scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
 run(scenarioName);
 
 
-identifier = 'nr_DE_3_effect_flash_improved_bounds';
+identifier = 'nr_three_effect_esa_improved_bounds_scen';
 
 maxIterations = 1e6;
 
@@ -98,7 +98,7 @@ for i=1:numScenarios
     maxIterations = 5e7/Npop;
     
     
-    F_VTR = 1e-8;
+    F_VTR = -inf;
     I_D = length(lb);
     FVr_minbound = lb'; 
     FVr_maxbound = ub'; 

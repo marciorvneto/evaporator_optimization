@@ -11,18 +11,18 @@ while true
    disp(strcat('=== Iteration',num2str(count),' ==='))
    f_xOld = feval(fun,xOld);
    J = numericalJacobian(fun,n,xOld,1e-5);
-   if(rcond(J)) < 1e-8
-       xFinal = xNew;
-       break
-   end
+%    if(det(J)) < 1e-8
+%        xFinal = xNew;
+%        break
+%    end
 %    if(rcond(J) < 1e-16)
 %       dx = (-J'*J + 1e4*eye(n))\(J'*f_xOld); 
 %    else
 %        dx = (-J)\f_xOld; 
 %        dx = real(backtrack(fun,x0,dx,rate));
 %    end
-   dx = real((-J)\f_xOld); 
-%    dx = real(backtrack(fun,x0,dx,rate));
+   dx = ((-J)\f_xOld); 
+   dx = (backtrack(fun,x0,dx,rate));
    xNew = xOld + dx;
    f_xNew = feval(fun,xNew);
    normF = f_xNew'*f_xNew;

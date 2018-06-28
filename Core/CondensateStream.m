@@ -39,8 +39,7 @@ classdef CondensateStream < Stream
             guess = var;
             guess(obj.iFlow) = obj.flow;
             guess(obj.iTemperature) = obj.temperature;
-            guess(obj.iX_dis) = obj.x_dis;
-            guess(obj.iX_tot) = obj.x_tot;
+            guess(obj.iPressure) = obj.pressure;
         end
         function obj = fetchVariables(obj,result)
             obj.flow = result(obj.iFlow);

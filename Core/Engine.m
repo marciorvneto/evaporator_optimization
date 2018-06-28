@@ -17,7 +17,7 @@ classdef Engine < handle
         function obj = Engine(handler)
            obj.handler = handler;
            obj.temperatureBounds = [273.15,600];
-           obj.pressureBounds = [0,1000];
+           obj.pressureBounds = [0,500];
            obj.flowBounds = [0,100];
            obj.x_disBounds = [0,1];
            obj.x_totBounds = [0,1];

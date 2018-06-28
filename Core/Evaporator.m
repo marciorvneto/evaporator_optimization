@@ -161,12 +161,14 @@ classdef Evaporator < Block
             % Enthalpies
             
             hF = BlackLiquor.h(xF_dis,TF);
-            hL = BlackLiquor.h(xL_dis,TL);            
+            hL = BlackLiquor.h(xL_dis,TV);            
             hC = Steam.hLSatT(TS);            
             HS = Steam.hVSatT(TS);
             HV = Steam.hVSatT(TV);
             
-            assert(HS > hC)
+%             assert(HS > hC)
+%             assert(HS>1500)
+% %             assert(hC < 300)
 
             % System of equations
             y = zeros(obj.numEquations(),1);
@@ -176,12 +178,12 @@ classdef Evaporator < Block
             y(4) = (F*xF_tot - L*xL_tot);
             y(5) = (PS - PC);
             y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)));
-%             y(6) = (TV - (Steam.satT(PV/1000)))/100;
+%             y(6) = (TV - (Steam.satT(PV/1000)));
             y(7) = (TV - TL);
             y(8) = (QQ - S*(HS - hC));
             y(9) = (QQ - obj.U*AA*(TS-TL));
             y(10) = (QQ + F*hF - (V*HV + L*hL));
-            y(11) = (TC - Steam.satT(PC/1000));
+            y(11) = (TC - Steam.satT(PS/1000));
 %             y(11) = (TC - TS)/1;
             
             
