@@ -53,9 +53,10 @@ classdef VMixer < Block
             y(3) = (var(inStreams{1}.iPressure) - var(vaporOut.iPressure));
             for n=2:length(inStreams)
                 stream1 = inStreams{n};
+                stream2 = inStreams{n-1};
                 P1 = var(stream1.iPressure);
-                P2 = var(vaporOut.iPressure);
-                y(3+n-1) = (P1 - P2)/1000; 
+                P2 = var(stream2.iPressure);
+                y(3+n-1) = (P1 - P2)/100; 
             end
 
             

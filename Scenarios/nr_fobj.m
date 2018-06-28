@@ -13,18 +13,26 @@
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function S_MSE= nr_fobj(FVr_temp, S_struct)
-disp('eval')
 
     engine = S_struct.engine;
     
     fx = @(x) engine.evaluateBalances(x,engine.handler);
+    feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
+    
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12);
+    
+    [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,FVr_temp,op);
+    if exitflag == 1
+        disp('solved easy problem')
+        FVr_temp = real(xSolved);
+    end
     
 %     [xSolved,solved] = engine.run(FVr_temp');
     
 %     fx = engine.evaluateBalances(xSolved,engine.handler);
-    [xSolved,fval,exitflag,output,jacob] = fsolve(fx,FVr_temp);
+    [xSolved,fval,exitflag,output,jacob] = fsolve(fx,FVr_temp,op);
     
-    fprintf(1,'Exitflag: %d',exitflag);
+    fprintf(1,'Exitflag: %d\n',exitflag);
  
     S_MSE.I_nc      = 0;%no constraints
     S_MSE.FVr_ca    = 0;%no constraint array
@@ -32,7 +40,7 @@ disp('eval')
     if exitflag > 0
         S_MSE.FVr_oa(1) =norm(fval);
     else
-        S_MSE.FVr_oa(1) = 1e6;
+        S_MSE.FVr_oa(1) = 1e9;
         
     end
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);

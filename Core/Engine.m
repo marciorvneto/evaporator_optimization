@@ -184,6 +184,35 @@ classdef Engine < handle
             
         end
         
+        function y = evaluateEasyBalances(obj,var,handler)
+            
+            % Blocks
+            
+%             y = zeros(obj.numUnknowns(handler),1);
+            y = [];
+            start = 1;
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                result = currentBlock.evaluateEasy(var);
+                endY = start+length(result)-1;
+                y(start:endY) = result;
+                start = endY + 1;
+            end
+            
+            % Fixed values
+            
+            for n = 1:handler.numStreams()
+                currentStream = handler.getStream(n);
+                result = currentStream.evaluate(var);
+                endY = start+length(result)-1;
+                y(start:endY) = result;
+                start = endY + 1;
+            end
+            
+            y = y(:);
+            
+        end
+        
         function [A,b] = linearConstraints(obj,handler)
             
             numUnknowns = obj.numUnknowns(handler);

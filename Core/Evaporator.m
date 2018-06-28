@@ -167,38 +167,119 @@ classdef Evaporator < Block
             HV = Steam.hVSatT(TV);
             
 %             assert(HS > hC)
+%             assert(HV > hL)
 %             assert(HS>1500)
 % %             assert(hC < 300)
 
             % System of equations
             y = zeros(obj.numEquations(),1);
-            y(1) = (S - C);
-            y(2) = (F - V - L);
-            y(3) = (F*xF_dis - L*xL_dis);
-            y(4) = (F*xF_tot - L*xL_tot);
-            y(5) = (PS - PC);
-            y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)));
+            y(1) = (S - C)/10;
+            y(2) = (F - V - L)/10;
+            y(3) = (F*xF_dis - L*xL_dis)/10;
+            y(4) = (F*xF_tot - L*xL_tot)/10;
+            y(5) = (PS - PC)/100;
+            y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)))/100;
 %             y(6) = (TV - (Steam.satT(PV/1000)));
-            y(7) = (TV - TL);
-            y(8) = (QQ - S*(HS - hC));
-            y(9) = (QQ - obj.U*AA*(TS-TL));
-            y(10) = (QQ + F*hF - (V*HV + L*hL));
-            y(11) = (TC - Steam.satT(PS/1000));
+            y(7) = (TV - TL)/100;
+            y(8) = (QQ - S*(HS - hC))/10000;
+            y(9) = (QQ - obj.U*AA*(TS-TL))/10000;
+            y(10) = (QQ + F*hF - (V*HV + L*hL))/10000;
+            y(11) = (TC - Steam.satT(PS/1000))/100;
 %             y(11) = (TC - TS)/1;
             
             
             count = 12;
             if(obj.fixedA)
-                y(count) = (obj.A - var(obj.iA))/1;
+                y(count) = (obj.A - var(obj.iA))/1000;
                 count = count + 1;
             end
             if(obj.fixedQ)
-                y(count) = (obj.Q - var(obj.iQ));
+                y(count) = (obj.Q - var(obj.iQ))/10000;
                 count = count + 1;
             end
             if (obj.areaEqualTo ~= -1)
                otherEvap = obj.areaEqualTo;
-               y(count) = (var(obj.iA) - var(otherEvap.iA));
+               y(count) = (var(obj.iA) - var(otherEvap.iA))/1000;
+               count = count + 1;
+            end
+
+        end
+        
+        function y = easyEvaluate(obj,var)
+
+            % Fetch variables
+
+            liquidFeed = obj.liquidFeed();
+            vaporFeed = obj.vaporFeed();
+            liquidOut = obj.liquidOut();
+            vaporOut = obj.vaporOut();
+            condensateOut = obj.condensateOut();
+
+            F = var(liquidFeed.iFlow);
+            V = var(vaporOut.iFlow);
+            L = var(liquidOut.iFlow);
+            S = var(vaporFeed.iFlow);
+            C = var(condensateOut.iFlow);
+
+            QQ = var(obj.iQ);
+            AA = var(obj.iA);
+
+            TF = var(liquidFeed.iTemperature);
+            TS = var(vaporFeed.iTemperature);
+            TV = var(vaporOut.iTemperature);
+            TL = var(liquidOut.iTemperature);
+            TC = var(condensateOut.iTemperature);
+            
+            PS = var(vaporFeed.iPressure);
+            PC = var(condensateOut.iPressure);
+            PV = var(vaporOut.iPressure);
+
+            xL_dis = var(liquidOut.iX_dis);
+            xL_tot = var(liquidOut.iX_tot);
+            xF_dis = var(liquidFeed.iX_dis);
+            xF_tot = var(liquidFeed.iX_tot);
+
+            % Enthalpies
+            
+            hF = BlackLiquor.h(xF_dis,TF);
+            hL = BlackLiquor.h(xL_dis,TV);            
+            hC = Steam.hLSatT(TS);            
+            HS = Steam.hVSatT(TS);
+            HV = Steam.hVSatT(TV);
+            
+%             assert(HS > hC)
+%             assert(HS>1500)
+% %             assert(hC < 300)
+
+            % System of equations
+            y = zeros(obj.numEquations(),1);
+            y(1) = (S - C)/10;
+            y(2) = (F - V - L)/10;
+            y(3) = (F*xF_dis - L*xL_dis)/10;
+            y(4) = (F*xF_tot - L*xL_tot)/10;
+            y(5) = (PS - PC)/100;
+%             y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)));
+            y(6) = (TV - (Steam.satT(PV/1000)))/100;
+            y(7) = (TV - TL)/100;
+            y(8) = (QQ - S*2200)/10000;
+            y(9) = (QQ - obj.U*AA*(TS-TL))/10000;
+            y(10) = (S-V)/10;
+            y(11) = (TC - Steam.satT(PS/1000))/100;
+%             y(11) = (TC - TS)/1;
+            
+            
+            count = 12;
+            if(obj.fixedA)
+                y(count) = (obj.A - var(obj.iA))/1000;
+                count = count + 1;
+            end
+            if(obj.fixedQ)
+                y(count) = (obj.Q - var(obj.iQ))/10000;
+                count = count + 1;
+            end
+            if (obj.areaEqualTo ~= -1)
+               otherEvap = obj.areaEqualTo;
+               y(count) = (var(obj.iA) - var(otherEvap.iA))/1000;
                count = count + 1;
             end
 

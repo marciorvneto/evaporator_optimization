@@ -119,12 +119,12 @@ handler.connectOutStream(F1,LFlash);
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
-% engine.QBounds = [7.32e3,73.2e3];
-% engine.ABounds = [458,7320];
-engine.QBounds = [20e3,30.2e3];
-engine.ABounds = [258,1200];
-engine.x_disBounds = [0.1,0.6];
-engine.x_totBounds = [0.1,0.6];
+engine.QBounds = [7.32e3,73.2e3];
+engine.ABounds = [458,7320];
+% engine.QBounds = [20e3,30.2e3];
+% engine.ABounds = [258,1200];
+engine.x_disBounds = [0.2,0.5];
+engine.x_totBounds = [0.2,0.5];
 
 [lb,ub] = engine.getBounds(engine.handler);
 

@@ -24,11 +24,6 @@ C1 = CondensateStream('C1','COND');
 C2 = CondensateStream('C2','COND');
 C3 = CondensateStream('C3','COND');
 
-F1 = Flash('F1');
-VMIX = VMixer('VMIX');
-VMixOut = VaporStream('VMixOut','VAPO');
-VFlash = VaporStream('VFlash','VAPO');
-LFlash = CondensateStream('LFlash','BLIQ');
 
 %% Input data
 
@@ -53,7 +48,7 @@ L0.fixedX_Dis = true;
 
 V3.temperature = 60 + 273.16;
 V3.fixedTemperature = true;
-% V3.saturated = true;
+% V1.saturated = true;
 
 %% Simulator setup
 
@@ -77,13 +72,6 @@ handler.addStream(C1);
 handler.addStream(C2);
 handler.addStream(C3);
 
-% Flash
-
-handler.addStream(VMixOut);
-handler.addBlock(VMIX);
-handler.addBlock(F1);
-handler.addStream(VFlash);
-handler.addStream(LFlash);
 
 %% Connectivity
 
@@ -91,8 +79,7 @@ handler.addStream(LFlash);
 
 handler.connectInStream(E1,V0);
 handler.connectBlocks(E1,E2,V1);
-handler.connectBlocks(E2,VMIX,V2);
-handler.connectBlocks(VMIX,E3,VMixOut);
+handler.connectBlocks(E2,E3,V2);
 handler.connectOutStream(E3,V3);
 
 % Black Liquor
@@ -108,23 +95,18 @@ handler.connectOutStream(E1,C1);
 handler.connectOutStream(E2,C2);
 handler.connectOutStream(E3,C3);
 
-% Flash
-
-handler.connectInStream(F1,C2);
-handler.connectBlocks(F1,VMIX,VFlash);
-handler.connectOutStream(F1,LFlash);
 
 %% Engine setup
 
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
-engine.QBounds = [7.32e3,73.2e3];
-engine.ABounds = [458,7320];
-% engine.QBounds = [20e3,30.2e3];
-% engine.ABounds = [258,1200];
-engine.x_disBounds = [0.2,0.5];
-engine.x_totBounds = [0.2,0.5];
+% engine.QBounds = [7.32e3,73.2e3];
+% engine.ABounds = [458,7320];
+engine.QBounds = [10e3,40.2e3];
+engine.ABounds = [258,1500];
+engine.x_disBounds = [0.1,0.6];
+engine.x_totBounds = [0.1,0.6];
 
 [lb,ub] = engine.getBounds(engine.handler);
 
