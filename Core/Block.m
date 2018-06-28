@@ -37,6 +37,10 @@ classdef Block < handle
         function guess = transportInitialGuesses(~,~)
         end
         
+        function y = evaluateEasy(obj,var)
+            y = obj.evaluate(var);
+        end
+        
         function obj = addInStream(obj,stream)
            obj.inStreams{end+1} = stream;
         end

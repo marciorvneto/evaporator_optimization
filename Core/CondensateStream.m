@@ -39,8 +39,7 @@ classdef CondensateStream < Stream
             guess = var;
             guess(obj.iFlow) = obj.flow;
             guess(obj.iTemperature) = obj.temperature;
-            guess(obj.iX_dis) = obj.x_dis;
-            guess(obj.iX_tot) = obj.x_tot;
+            guess(obj.iPressure) = obj.pressure;
         end
         function obj = fetchVariables(obj,result)
             obj.flow = result(obj.iFlow);
@@ -50,7 +49,7 @@ classdef CondensateStream < Stream
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
             if(obj.fixedPressure)
-                y(end+1) = (var(obj.iPressure) - obj.pressure)/1000;
+                y(end+1) = (var(obj.iPressure) - obj.pressure)/100;
             end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)

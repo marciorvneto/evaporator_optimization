@@ -119,19 +119,11 @@ handler.connectOutStream(F1,LFlash);
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
 
+engine.QBounds = [7.32e3,73.2e3];
+engine.ABounds = [458,7320];
+engine.x_disBounds = [0.2,0.5];
+engine.x_totBounds = [0.2,0.5];
+
 [lb,ub] = engine.getBounds(engine.handler);
-
-Fbound = 50;
-Lbound = 50*0.2/0.5;
-Vbound = Fbound - Lbound;
-qTotLowerBound = Lbound*BlackLiquor.h(L0.x_dis,L3.temperature) + Vbound*Steam.hVSatT(V3.temperature) -Fbound*BlackLiquor.h(L3.x_dis,L3.temperature);
-qEachMin = 0.1*qTotLowerBound/3;
-qEachMax = 10*qTotLowerBound/3;
-
-% AMin = qEachMax / max([E1.U,E2.U,E3.U]) / ();
-% AMax = qEachMin / min([E1.U,E2.U,E3.U]);
-
-% engine.ABounds = [AMin, AMax];
-engine.QBounds = [qEachMin,qEachMax];
 
 fun = @(x) engine.evaluateBalances(x,engine.handler);

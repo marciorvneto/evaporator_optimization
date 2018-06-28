@@ -6,6 +6,6 @@ hvec(ivar)=h;
 x0_plus_h = x0 + hvec;
 x0_minus_h = x0 - hvec;
 
-dfdx = (feval(fcn,x0_plus_h)-feval(fcn,x0_minus_h))/(2*h);
+dfdx = (feval(fcn,x0_plus_h)-feval(fcn,x0))/(h);
 
 end

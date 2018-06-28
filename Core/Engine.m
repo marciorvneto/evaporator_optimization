@@ -17,7 +17,7 @@ classdef Engine < handle
         function obj = Engine(handler)
            obj.handler = handler;
            obj.temperatureBounds = [273.15,600];
-           obj.pressureBounds = [0,1000];
+           obj.pressureBounds = [0,500];
            obj.flowBounds = [0,100];
            obj.x_disBounds = [0,1];
            obj.x_totBounds = [0,1];
@@ -139,6 +139,7 @@ classdef Engine < handle
         end
 
         % =========== Math ====================
+<<<<<<< HEAD
 
         function obj = run(obj,x0)
            solved = false;
@@ -146,22 +147,22 @@ classdef Engine < handle
 %            obj.preallocateVariables(obj.handler);
 %            initialGuess = obj.transportInitialGuesses(obj.handler);
             initialGuess = x0;
+=======
+%         
+%         function obj = run(obj,x0)
+%            solved = false;
+%            initialGuess = x0;
+%            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
+%            [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
+%            obj.returnVariables(obj.handler,xResult);
+%            obj.generateReport(xResult,obj.handler);
+%         end
+        
+        function [xResult,solved] = run(obj,x0)
+           initialGuess = x0;
+>>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
-%            consistency = @(x) obj.consistencyCheck(x,obj.handler);
-%            hardSolver = BBSolve(1e-5);
-%            hardSolver.extraCriteria = consistency;
-%            [lb,ub] = obj.getBounds(obj.handler);
-%            domain = Node(lb,ub);
-%            [Aeq,beq] = obj.linearConstraints(obj.handler);
-%            [xResult,ok] = hardSolver.solve(solFcn,obj.numUnknowns(obj.handler),domain,Aeq,beq);
-%            result = solveHomotopy(solFcn,obj.numUnknowns(obj.handler),initialGuess,1e-6);
-           while(~solved || ~consistent)
-                [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);
-                consistent = obj.consistencyCheck(xResult,obj.handler);
-                initialGuess = obj.randomGuess(obj.handler);
-           end
-           obj.returnVariables(obj.handler,xResult);
-           obj.generateReport(xResult,obj.handler);
+           [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
         end
 
         function y = evaluateBalances(obj,var,handler)
@@ -192,7 +193,40 @@ classdef Engine < handle
             y = y(:);
 
         end
+<<<<<<< HEAD
 
+=======
+        
+        function y = evaluateEasyBalances(obj,var,handler)
+            
+            % Blocks
+            
+%             y = zeros(obj.numUnknowns(handler),1);
+            y = [];
+            start = 1;
+            for n = 1:handler.numBlocks()
+                currentBlock = handler.getBlock(n);
+                result = currentBlock.evaluateEasy(var);
+                endY = start+length(result)-1;
+                y(start:endY) = result;
+                start = endY + 1;
+            end
+            
+            % Fixed values
+            
+            for n = 1:handler.numStreams()
+                currentStream = handler.getStream(n);
+                result = currentStream.evaluate(var);
+                endY = start+length(result)-1;
+                y(start:endY) = result;
+                start = endY + 1;
+            end
+            
+            y = y(:);
+            
+        end
+        
+>>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
         function [A,b] = linearConstraints(obj,handler)
 
             numUnknowns = obj.numUnknowns(handler);

@@ -12,35 +12,25 @@ scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
 run(scenarioName);
 
 
-identifier = 'nr_three_effect_esa_improved_bounds_scen';
+identifier = 'nr_DE_3_effect_flash_improved_bounds';
 
 maxIterations = 1e6;
 
-<<<<<<< HEAD
-minimumF = 0.8;
-maximumF = 0.9;
-pointsF = 3;
-
-minimumNpop = 350;
-maximumNpop = 600;
-pointsNpop = 2;
-=======
 minimumF = 0.4;
 maximumF = 0.6;
 pointsF = 3;
 
-minimumNpop = 10;
-maximumNpop = 10;
+minimumNpop = 3*52;
+maximumNpop = 5*52;
 pointsNpop = 3;
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
 
 minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 1;
+numberTrials = 3;
 
-logEveryXIterations = 1;
+logEveryXIterations = 100;
 
 % nCores = feature('numcores');
 
@@ -77,12 +67,12 @@ nCores = 12;
 for i=1:numScenarios
     
     S_struct = struct;
-
+    
     F = scenarios(i,1);
     Npop = scenarios(i,2);
     CR = scenarios(i,3);
     trial = scenarios(i,4);
-
+    
     fileName = ['Npop_',num2str(Npop),'_F_',num2str(F),'_CR_',num2str(CR),'_Trial_',num2str(trial)];
     filePath = [pathToFolder,'/',fileName,'.result'];
     file = fopen(filePath,'w');
@@ -102,31 +92,25 @@ for i=1:numScenarios
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
-<<<<<<< HEAD
-
-
-    F_VTR = 1e-10;
-=======
     
     %% Edit
     
     maxIterations = 5e7/Npop;
     
     
-    F_VTR = -inf;
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
+    F_VTR = 1e-8;
     I_D = length(lb);
-    FVr_minbound = lb';
-    FVr_maxbound = ub';
+    FVr_minbound = lb'; 
+    FVr_maxbound = ub'; 
     I_bnd_constr = 1;
-    I_NP = Npop;
-	I_itermax = maxIterations;
-	F_weight = F;
+    I_NP = Npop; 
+	I_itermax = maxIterations; 
+	F_weight = F; 
 	F_CR = CR;
     I_strategy = 1;
     I_refresh = logEveryXIterations;
     I_plotting = 0;
-
+    
     S_struct.I_NP         = I_NP;
     S_struct.F_weight     = F_weight;
     S_struct.F_CR         = F_CR;
@@ -139,14 +123,9 @@ for i=1:numScenarios
     S_struct.I_strategy   = I_strategy;
     S_struct.I_refresh    = I_refresh;
     S_struct.I_plotting   = I_plotting;
-
+    
     S_struct.engine = engine;
     S_struct.file = file;
-<<<<<<< HEAD
-
-    [FVr_x,S_y,I_nf] = deopt('fobj_de',S_struct);
-
-=======
     
     [FVr_x,S_y,I_nf] = deopt('nr_fobj',S_struct);
    
@@ -156,10 +135,6 @@ for i=1:numScenarios
 end
 
 % delete(pool);
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
 
-    fclose(file);
 
-end
 
-delete(pool);
