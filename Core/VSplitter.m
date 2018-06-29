@@ -32,6 +32,10 @@ classdef VSplitter < Block
             vaporIn = obj.vaporIn();
             outStreams = obj.vaporOutStreams();
             
+            Pin = var(vaporIn.iPressure);
+            P1 = var(outStreams{1}.iPressure);
+            P2 = var(outStreams{2}.iPressure);
+            
             Fin = var(vaporIn.iFlow);
             F1 = var(outStreams{1}.iFlow);
             F2 = var(outStreams{2}.iFlow);
@@ -46,10 +50,12 @@ classdef VSplitter < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = Tin - T1;
-            y(2) = Tin - T2;
-            y(3) = F1 - F1split;
-            y(4) = F2 - F2split;
+            y(1) = (Tin - T1)/100;
+            y(2) = (Tin - T2)/100;
+            y(3) = (F1 - F1split)/10;
+            y(4) = (F2 - F2split)/10;
+            y(5) = (P1 - Pin)/100;
+            y(6) = (P2 - Pin)/100;
             
             
         end

@@ -291,8 +291,14 @@ while ((I_iter < I_itermax) & (S_bestval.FVr_oa(1) > F_VTR))
      if ((rem(I_iter,I_refresh) == 0) | I_iter == 1)
         %MY ADDITIONS
         fprintf(S_struct.file,'%d\t%d\t%e\t',I_iter,I_nfeval,S_bestval.FVr_oa(1));
-        for n=1:I_D
-          fprintf(S_struct.file,'%e\t',FVr_bestmem(n));
+        if S_struct.internalConvergence
+            for n=1:I_D
+              fprintf(S_struct.file,'%e\t',S_bestval.convergedX(n));
+            end
+        else
+            for n=1:I_D
+              fprintf(S_struct.file,'%e\t',FVr_bestmem(n));
+            end
         end
        fprintf(S_struct.file,'\n');
         

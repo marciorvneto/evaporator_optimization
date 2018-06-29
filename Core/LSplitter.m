@@ -54,14 +54,14 @@ classdef LSplitter < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = Tin - T1;
-            y(2) = Tin - T2;
+            y(1) = (Tin - T1)/100;
+            y(2) = (Tin - T2)/100;
             y(3) = X_dis_in - X_dis_1;
             y(4) = X_dis_in - X_dis_2;
             y(5) = X_tot_in - X_tot_1;
             y(6) = X_tot_in - X_tot_2;
-            y(7) = F1 - F1split;
-            y(8) = F2 - F2split;
+            y(7) = (F1 - F1split)/10;
+            y(8) = (F2 - F2split)/10;
             
             
         end

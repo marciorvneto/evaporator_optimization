@@ -11,6 +11,7 @@ classdef Engine < handle
         pressureBounds;
         QBounds;
         ABounds;
+        addInfo;
     end
 
     methods
@@ -139,28 +140,26 @@ classdef Engine < handle
         end
 
         % =========== Math ====================
-<<<<<<< HEAD
-
-        function obj = run(obj,x0)
-           solved = false;
-           consistent = true;
-%            obj.preallocateVariables(obj.handler);
-%            initialGuess = obj.transportInitialGuesses(obj.handler);
-            initialGuess = x0;
-=======
-%         
 %         function obj = run(obj,x0)
 %            solved = false;
-%            initialGuess = x0;
-%            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
-%            [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
-%            obj.returnVariables(obj.handler,xResult);
-%            obj.generateReport(xResult,obj.handler);
+%            consistent = true;
+% %            obj.preallocateVariables(obj.handler);
+% %            initialGuess = obj.transportInitialGuesses(obj.handler);
+%             initialGuess = x0;
+% 
+% %         
+% %         function obj = run(obj,x0)
+% %            solved = false;
+% %            initialGuess = x0;
+% %            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
+% %            [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
+% %            obj.returnVariables(obj.handler,xResult);
+% %            obj.generateReport(xResult,obj.handler);
+% %         end
 %         end
         
         function [xResult,solved] = run(obj,x0)
            initialGuess = x0;
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
            solFcn = @(input) obj.evaluateBalances(input,obj.handler);
            [xResult,solved] = solveGlobalNR(solFcn,initialGuess,obj.numUnknowns(obj.handler),2);           
         end
@@ -193,9 +192,7 @@ classdef Engine < handle
             y = y(:);
 
         end
-<<<<<<< HEAD
 
-=======
         
         function y = evaluateEasyBalances(obj,var,handler)
             
@@ -225,8 +222,7 @@ classdef Engine < handle
             y = y(:);
             
         end
-        
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
+
         function [A,b] = linearConstraints(obj,handler)
 
             numUnknowns = obj.numUnknowns(handler);

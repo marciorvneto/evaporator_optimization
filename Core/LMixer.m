@@ -54,10 +54,10 @@ classdef LMixer < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = Fout - sum(Fin) ;
-            y(2) = Fout*Hout - Fin'*Hin;
-            y(3) = Fout*X_dis_out - Fin'*X_dis_in;
-            y(4) = Fout*X_tot_out - Fin'*X_tot_in;
+            y(1) = (Fout - sum(Fin))/10;
+            y(2) = (Fout*Hout - Fin'*Hin)/10000;
+            y(3) = (Fout*X_dis_out - Fin'*X_dis_in)/10;
+            y(4) = (Fout*X_tot_out - Fin'*X_tot_in)/10;
             
         end
         

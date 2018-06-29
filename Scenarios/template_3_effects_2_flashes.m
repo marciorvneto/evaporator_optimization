@@ -1,4 +1,4 @@
-%%%% Defining blocks
+%% Defining blocks
 E1 = Evaporator(1.6,973.522242261,'EFFECT-2');
 E0 = Evaporator(1.2,973.522242261,'EFFECT-1');
 E2 = Evaporator(2.0,973.522242261,'EFFECT-3');
@@ -6,7 +6,7 @@ F1 = Flash('FLASH-1');
 F2 = Flash('FLASH-2');
 VMix3 = VMixer('MIX-3');
 VMix2 = VMixer('MIX-2');
-%%%% Defining streams
+%% Defining streams
 L9 = LiquidStream('BLSTREAM-10','BLIQ');
 L8 = LiquidStream('BLSTREAM-11','BLIQ');
 L11 = LiquidStream('BLSTREAM-12','BLIQ');
@@ -24,9 +24,9 @@ V7 = VaporStream('VSTREAM-21','VAPO');
 V6 = VaporStream('VSTREAM-22','VAPO');
 V9 = VaporStream('VSTREAM-23','VAPO');
 V8 = VaporStream('VSTREAM-24','VAPO');
-%%%% Creating a handler for blocks and streams
+%% Creating a handler for blocks and streams
 handler = Handler();
-%%%% Including blocks
+%% Including blocks
 handler.addBlock(E1);
 handler.addBlock(VMix3);
 handler.addBlock(F1);
@@ -34,7 +34,7 @@ handler.addBlock(VMix2);
 handler.addBlock(F2);
 handler.addBlock(E2);
 handler.addBlock(E0);
-%%%% Including streams
+%% Including streams
 handler.addStream(C5);
 handler.addStream(V9);
 handler.addStream(L11);
@@ -52,7 +52,7 @@ handler.addStream(V6);
 handler.addStream(C6);
 handler.addStream(L8);
 handler.addStream(V12);
-%%%% Connecting streams
+%% Connecting streams
 handler.connectBlocks(E2,E1,L9);
 handler.connectInStream(E2,L8);
 handler.connectOutStream(E0,L11);
@@ -70,6 +70,6 @@ handler.connectBlocks(VMix2,E1,V7);
 handler.connectBlocks(E0,VMix2,V6);
 handler.connectBlocks(VMix3,E2,V9);
 handler.connectBlocks(E1,VMix3,V8);
-%%%% Creating the simulation engine
+%% Creating the simulation engine
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);

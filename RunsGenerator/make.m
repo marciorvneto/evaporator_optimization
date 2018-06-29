@@ -8,15 +8,15 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
+scenarioName = 'nr_new_in_series.m';
 run(scenarioName);
 
 
-identifier = 'nr_three_effect_esa_improved_bounds_scen';
+identifier = 'nr_new_in_series';
 
 maxIterations = 1e6;
 
-<<<<<<< HEAD
+
 minimumF = 0.8;
 maximumF = 0.9;
 pointsF = 3;
@@ -24,15 +24,14 @@ pointsF = 3;
 minimumNpop = 350;
 maximumNpop = 600;
 pointsNpop = 2;
-=======
+
 minimumF = 0.4;
 maximumF = 0.6;
 pointsF = 3;
 
-minimumNpop = 10;
-maximumNpop = 10;
+minimumNpop = 5;
+maximumNpop = 5;
 pointsNpop = 3;
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
 
 minimumCR = 0.9;
 maximumCR = 0.9;
@@ -102,11 +101,9 @@ for i=1:numScenarios
     fprintf(file,'Iteration\tNumberFeval\tfobj\tBest\n');
     fclose(file);
     file = fopen(filePath,'a');
-<<<<<<< HEAD
 
 
     F_VTR = 1e-10;
-=======
     
     %% Edit
     
@@ -114,7 +111,6 @@ for i=1:numScenarios
     
     
     F_VTR = -inf;
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
     I_D = length(lb);
     FVr_minbound = lb';
     FVr_maxbound = ub';
@@ -139,15 +135,12 @@ for i=1:numScenarios
     S_struct.I_strategy   = I_strategy;
     S_struct.I_refresh    = I_refresh;
     S_struct.I_plotting   = I_plotting;
+    S_struct.internalConvergence   = true;
 
     S_struct.engine = engine;
     S_struct.file = file;
-<<<<<<< HEAD
 
-    [FVr_x,S_y,I_nf] = deopt('fobj_de',S_struct);
-
-=======
-    
+   
     [FVr_x,S_y,I_nf] = deopt('nr_fobj',S_struct);
    
    
@@ -156,10 +149,8 @@ for i=1:numScenarios
 end
 
 % delete(pool);
->>>>>>> 401fa00623822ba023ff14f620d9d7375bdf17ce
 
     fclose(file);
 
-end
 
 delete(pool);
