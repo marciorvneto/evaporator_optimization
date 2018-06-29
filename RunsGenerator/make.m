@@ -17,20 +17,12 @@ identifier = 'nr_new_in_series';
 maxIterations = 1e6;
 
 
-minimumF = 0.8;
-maximumF = 0.9;
-pointsF = 3;
-
-minimumNpop = 350;
-maximumNpop = 600;
-pointsNpop = 2;
-
 minimumF = 0.4;
 maximumF = 0.6;
 pointsF = 3;
 
-minimumNpop = 5;
-maximumNpop = 5;
+minimumNpop = 10;
+maximumNpop = 20;
 pointsNpop = 3;
 
 minimumCR = 0.9;
@@ -71,9 +63,9 @@ copyfile(['../Scenarios/',scenarioName],[pathToFolder,'/',scenarioName])
 %% Create a parpool and spawn threads
 
 nCores = 12;
-% pool = parpool(nCores);
+pool = parpool(nCores);
 
-for i=1:numScenarios
+parfor i=1:numScenarios
     
     S_struct = struct;
 
@@ -148,7 +140,7 @@ for i=1:numScenarios
     
 end
 
-% delete(pool);
+delete(pool);
 
     fclose(file);
 
