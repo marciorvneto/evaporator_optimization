@@ -2,12 +2,12 @@ classdef BlackLiquor
 
   methods (Static)
 
-    function y = cp(X,tC)
+    function y = cp_BL(X,tC)
         % Cp in Kj/Kg.K
         y = 4.216*(1.0-X) + (1.675 + 3.31*(tC/1000.0))*X + (4.87 - 20*tC/1000.0)*(1-X)*X*X*X;
     end
 
-    function y = h(X,T)
+    function y = h_BL(X,T)
         a = 105.0;
         b = 0.300;
         tref = 80;
@@ -18,7 +18,7 @@ classdef BlackLiquor
         y = hw + hmix + dh;
     end
 
-    function y = intCp(X,tC)
+    function y = intCp_BL(X,tC)
         y = 4.216*(1-X)*tC + (1.675*tC + 3.31/2000.0*tC*tC)*X + (4.87*tC - 10/1000.0*tC*tC)*(1-X)*X*X*X;
     end
 

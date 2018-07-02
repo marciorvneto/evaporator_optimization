@@ -54,7 +54,7 @@ classdef VaporStream < Stream
                 y(end+1) = (var(obj.iPressure) - obj.pressure)/100;
             end
             if(obj.saturated)
-                y(end+1) = (var(obj.iPressure)/1000 - Steam.satP(var(obj.iTemperature)))/100;
+                y(end+1) = (var(obj.iPressure)/1000 - satP(var(obj.iTemperature),obj.Const))/100;
             end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)

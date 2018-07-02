@@ -17,6 +17,8 @@ classdef Stream < handle
         
         iTemperature;
         iFlow;
+        
+        Const;
     end
     
     methods
@@ -39,6 +41,8 @@ classdef Stream < handle
             
             obj.originBlock = 0;
             obj.endBlock = 0;
+            
+            obj.Const = SteamCoefficients();
         end
         function [lb,ub] = getBounds(obj,engine,lb,ub)
             lb(obj.iFlow) = engine.flowBounds(1);

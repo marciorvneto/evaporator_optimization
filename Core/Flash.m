@@ -67,9 +67,9 @@ classdef Flash < Block
             
             % Enthalpies
             
-            hL = Steam.hLSatT(TV);
-            hF = Steam.hLSatT(TF);
-            HV = Steam.hVSatT(TV);
+            hL = hLSatT(TV,obj.Const);
+            hF = hLSatT(TF,obj.Const);
+            HV = hVSatT(TV,obj.Const);
             
             % System of equations
             
@@ -77,8 +77,8 @@ classdef Flash < Block
             y(1) = (F - L - V)/10;
             y(2) = (TV - TL)/100;
             y(3) = (F*hF - (L*hL + V*HV))/10000;
-            y(4) = (PV/1000 - Steam.satP(TV))/100;
-            y(5) = (PL/1000 - Steam.satP(TV))/100;            
+            y(4) = (PV/1000 - satP(TV,obj.Const))/100;
+            y(5) = (PL/1000 - satP(TV,obj.Const))/100;            
           
 
         end
@@ -105,9 +105,9 @@ classdef Flash < Block
             
             % Enthalpies
             
-            hL = Steam.hLSatT(TV);
-            hF = Steam.hLSatT(TF);
-            HV = Steam.hVSatT(TV);
+            hL = hLSatT(TV,obj.Const);
+            hF = hLSatT(TF,obj.Const);
+            HV = hVSatT(TV,obj.Const);
             
             % System of equations
             
@@ -115,8 +115,8 @@ classdef Flash < Block
             y(1) = (F - L - V)/10;
             y(2) = (TV - TL)/10;
             y(3) = (F*100 - (L*100 + V*2300))/10000;
-            y(4) = (PV/1000 - Steam.satP(TV))/100;
-            y(5) = (PL/1000 - Steam.satP(TV))/100;            
+            y(4) = (PV/1000 - satP(TV,obj.Const))/100;
+            y(5) = (PL/1000 - satP(TV,obj.Const))/100;            
           
 
         end

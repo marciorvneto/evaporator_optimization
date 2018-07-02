@@ -7,6 +7,8 @@ classdef Block < handle
         inStreams;
         outStreams;
         index;
+        
+        Const;
     end
 
     methods
@@ -15,6 +17,8 @@ classdef Block < handle
            obj.inStreams = {};
            obj.outStreams = {};
            obj.index = -1;
+           
+           obj.Const = SteamCoefficients();
         end
         
         function [lb,ub] = getBounds(obj,engine,lb,ub)            

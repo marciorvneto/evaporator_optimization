@@ -1,6 +1,10 @@
 classdef SteamCoefficients
 
   properties (Constant)
+      
+      R = 0.461526; % kJ/Kg.K
+      Tc = 647.096; % K
+      Pc = 22.064; % MPa
 
       region1Coeffs = [1,0,-2,0.14632971213167;
                         2,0,-1,-0.84548187169114;

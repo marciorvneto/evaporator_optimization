@@ -38,12 +38,12 @@ classdef VMixer < Block
                 currentStream = inStreams{n};
                 Fin(n) = var(currentStream.iFlow);
                 Tin(n) = var(currentStream.iTemperature);
-                Hin(n) = Steam.hVSatT(Tin(n));
+                Hin(n) = hVSatT(Tin(n),obj.Const);
             end
            
             Fout = var(vaporOut.iFlow);
             Tout = var(vaporOut.iTemperature);
-            Hout =  Steam.hVSatT(Tout);
+            Hout =  hVSatT(Tout,obj.Const);
             
             % System of equations
             

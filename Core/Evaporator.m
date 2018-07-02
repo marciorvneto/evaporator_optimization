@@ -13,6 +13,7 @@ classdef Evaporator < Block
         fixedA = false;
         fixedQ = false;
         areaEqualTo = -1;
+        
     end
 
     methods
@@ -24,6 +25,7 @@ classdef Evaporator < Block
 
             obj.iA = -1;
             obj.iQ = -1;
+            
         end
 
         % ====== Helper ========
@@ -160,11 +162,11 @@ classdef Evaporator < Block
 
             % Enthalpies
             
-            hF = BlackLiquor.h(xF_dis,TF);
-            hL = BlackLiquor.h(xL_dis,TV);            
-            hC = Steam.hLSatT(TS);            
-            HS = Steam.hVSatT(TS);
-            HV = Steam.hVSatT(TV);
+            hF = h_BL(xF_dis,TF);
+            hL = h_BL(xL_dis,TV);            
+            hC = hLSatT(TS,obj.Const);            
+            HS = hVSatT(TS,obj.Const);
+            HV = hVSatT(TV,obj.Const);
             
 %             assert(HS > hC)
 %             assert(HV > hL)
@@ -178,13 +180,13 @@ classdef Evaporator < Block
             y(3) = (F*xF_dis - L*xL_dis)/10;
             y(4) = (F*xF_tot - L*xL_tot)/10;
             y(5) = (PS - PC)/100;
-            y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)))/100;
-%             y(6) = (TV - (Steam.satT(PV/1000)));
+            y(6) = (TV - (satT(PV/1000,obj.Const) + BPR(xL_dis,PV/1000)))/100;
+%             y(6) = (TV - (satT(PV/1000)));
             y(7) = (TV - TL)/100;
             y(8) = (QQ - S*(HS - hC))/10000;
             y(9) = (QQ - obj.U*AA*(TS-TL))/10000;
             y(10) = (QQ + F*hF - (V*HV + L*hL))/10000;
-            y(11) = (TC - Steam.satT(PS/1000))/100;
+            y(11) = (TC - satT(PS/1000,obj.Const))/100;
 %             y(11) = (TC - TS)/1;
             
             
@@ -241,11 +243,11 @@ classdef Evaporator < Block
 
             % Enthalpies
             
-            hF = BlackLiquor.h(xF_dis,TF);
-            hL = BlackLiquor.h(xL_dis,TV);            
-            hC = Steam.hLSatT(TS);            
-            HS = Steam.hVSatT(TS);
-            HV = Steam.hVSatT(TV);
+            hF = h_BL(xF_dis,TF);
+            hL = h_BL(xL_dis,TV);            
+            hC = hLSatT(TS,obj.Const);            
+            HS = hVSatT(TS,obj.Const);
+            HV = hVSatT(TV,obj.Const);
             
 %             assert(HS > hC)
 %             assert(HS>1500)
@@ -258,13 +260,13 @@ classdef Evaporator < Block
             y(3) = (F*xF_dis - L*xL_dis)/10;
             y(4) = (F*xF_tot - L*xL_tot)/10;
             y(5) = (PS - PC)/100;
-%             y(6) = (TV - (Steam.satT(PV/1000) + BlackLiquor.BPR(xL_dis,PV/1000)));
-            y(6) = (TV - (Steam.satT(PV/1000)))/100;
+%             y(6) = (TV - (satT(PV/1000) + BPR(xL_dis,PV/1000)));
+            y(6) = (TV - (satT(PV/1000,obj.Const)))/100;
             y(7) = (TV - TL)/100;
             y(8) = (QQ - S*2200)/10000;
             y(9) = (QQ - obj.U*AA*(TS-TL))/10000;
             y(10) = (S-V)/10;
-            y(11) = (TC - Steam.satT(PS/1000))/100;
+            y(11) = (TC - satT(PS/1000,obj.Const))/100;
 %             y(11) = (TC - TS)/1;
             
             
