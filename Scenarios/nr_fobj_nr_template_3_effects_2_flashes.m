@@ -19,7 +19,7 @@ function S_MSE= nr_fobj_nr_template_3_effects_2_flashes(FVr_temp, S_struct)
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-12,'MaxFunctionEvaluations',200*length(FVr_temp));
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
     
 %     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,FVr_temp,op);
 %     if exitflag > 0
