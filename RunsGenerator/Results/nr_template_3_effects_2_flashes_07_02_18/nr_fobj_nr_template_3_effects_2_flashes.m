@@ -30,14 +30,20 @@ function S_MSE= nr_fobj_nr_template_3_effects_2_flashes(FVr_temp, S_struct)
 
     [xSolved,fval,exitflag,output,jacob] = fsolve(fx,FVr_temp,op);
     
-    fprintf(1,'Exitflag: %d\n',exitflag);    
+    fprintf(1,'Exitflag: %d\n',exitflag);
+    
+    if sum(real(xSolved)>0) == length(xSolved)
+        allPositive = true;
+    else
+        allPositive = false;
+    end
     
  
     S_MSE.I_nc      = 0;%no constraints
     S_MSE.FVr_ca    = 0;%no constraint array
     S_MSE.I_no      = 1;%number of objectives (costs)
     S_MSE.actualValue = real(xSolved);
-    if exitflag > 0
+    if exitflag > 0 && allPositive
         S_MSE.FVr_oa(1) =norm(fval);
     else
         S_MSE.FVr_oa(1) = 1e12;

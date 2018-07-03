@@ -162,8 +162,8 @@ classdef Evaporator < Block
 
             % Enthalpies
             
-            hF = h_BL(xF_dis,TF);
-            hL = h_BL(xL_dis,TV);            
+            hF = h_BL(xF_dis,TF,obj.Const);
+            hL = h_BL(xL_dis,TV,obj.Const);            
             hC = hLSatT(TS,obj.Const);            
             HS = hVSatT(TS,obj.Const);
             HV = hVSatT(TV,obj.Const);
@@ -243,8 +243,8 @@ classdef Evaporator < Block
 
             % Enthalpies
             
-            hF = h_BL(xF_dis,TF);
-            hL = h_BL(xL_dis,TV);            
+            hF = h_BL(xF_dis,TF,obj.Const);
+            hL = h_BL(xL_dis,TV,obj.Const);            
             hC = hLSatT(TS,obj.Const);            
             HS = hVSatT(TS,obj.Const);
             HV = hVSatT(TV,obj.Const);

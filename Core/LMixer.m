@@ -42,14 +42,14 @@ classdef LMixer < Block
                 Tin(n) = var(currentStream.iTemperature);
                 X_dis_in(n) = var(currentStream.iX_dis);
                 X_tot_in(n) = var(currentStream.iX_tot);
-                Hin(n) = h_BL(X_dis_in(n),Tin(n));
+                Hin(n) = h_BL(X_dis_in(n),Tin(n),obj.Const);
             end
            
             Fout = var(liquidOut.iFlow);
             Tout = var(liquidOut.iTemperature);            
             X_dis_out = var(liquidOut.iX_dis);
             X_tot_out = var(liquidOut.iX_tot);
-            Hout = h_BL(X_dis_out,Tout);
+            Hout = h_BL(X_dis_out,Tout,obj.Const);
             
             % System of equations
             

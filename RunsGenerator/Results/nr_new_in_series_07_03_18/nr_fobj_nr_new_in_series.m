@@ -12,44 +12,70 @@
 %                   S_MSE.I_no   (O)    Number of objectives.
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function S_MSE= nr_fobj_nr_template_3_effects_2_flashes(FVr_temp, S_struct)    
+function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)    
 
     engine = S_struct.engine;
+    
+    Vout = engine.addInfo.Vout;
+    Vin = engine.addInfo.Vin;
+    
+    VSpl = engine.addInfo.VSpl;
+    LSpl = engine.addInfo.LSpl;
+    
+    VSpl.percentToFirstStream = FVr_temp(end);
+    LSpl.percentToFirstStream = FVr_temp(end-1);
+    
+%     VSpl.percentToFirstStream = 0.5;
+%     LSpl.percentToFirstStream = 0.5;
+    
+    VToNewEvap = engine.addInfo.VToNewEvap;
+    
+    Evap = engine.addInfo.Evap;
+    
+    x = FVr_temp(1:end-2);
+    splits = FVr_temp(end-1:end);
+    
     
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
     
-%     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,FVr_temp,op);
-%     if exitflag > 0
-%         disp('solved easy problem')
-%         FVr_temp = real(xSolved);
-%     end
+    [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
+    if exitflag > 0
+        disp('solved easy problem')
+        FVr_temp = real(xSolved);
+    end
     
 
-    [xSolved,fval,exitflag,output,jacob] = fsolve(fx,FVr_temp,op);
+    [xSolved,fval,exitflag,output,jacob] = fsolve(fx,x,op);
     
-    fprintf(1,'Exitflag: %d\n',exitflag);
-    
-    if sum(real(xSolved)>0) == length(xSolved)
-        allPositive = true;
-    else
-        allPositive = false;
-    end
+    fprintf(1,'Exitflag: %d\n',exitflag);    
     
  
     S_MSE.I_nc      = 0;%no constraints
     S_MSE.FVr_ca    = 0;%no constraint array
     S_MSE.I_no      = 1;%number of objectives (costs)
     S_MSE.actualValue = real(xSolved);
+    
+    allPositive = (sum(real(xSolved)>0) == length(xSolved));
+    
     if exitflag > 0 && allPositive
-        S_MSE.FVr_oa(1) =norm(fval);
+        flowToNewEvap = xSolved(VToNewEvap.iFlow);
+        if flowToNewEvap < 0.01
+            n = 3;
+        else
+            n = 4;
+        end
+        area = n*xSolved(Evap.iA);  
+        cost = 10000 +324*area^0.91;
+        S_MSE.FVr_oa(1) = cost;
+%         S_MSE.FVr_oa(1) =norm(fval);
     else
         S_MSE.FVr_oa(1) = 1e12;
         
     end
-    S_MSE.convergedX = real(xSolved(:));
+    S_MSE.convergedX = real([xSolved(:);splits(:)]);
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 

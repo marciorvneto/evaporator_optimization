@@ -8,13 +8,13 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_template_3_effects_2_flashes.m';
+scenarioName = 'nr_new_in_series.m';
 run(scenarioName);
 
 
-identifier = 'nr_template_3_effects_2_flashes';
+identifier = 'nr_new_in_series';
 
-objFunName = 'nr_fobj_nr_template_3_effects_2_flashes';
+objFunName = 'nr_fobj_nr_new_in_series';
 
 maxIterations = 1e6;
 
@@ -31,7 +31,7 @@ minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 1;
+numberTrials = 3;
 
 logEveryXIterations = 1;
 
@@ -66,9 +66,9 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 %% Create a parpool and spawn threads
 
 nCores = 12;
-pool = parpool(nCores);
+% pool = parpool(nCores);
 
-parfor i=1:numScenarios
+for i=1:numScenarios
     
     S_struct = struct;
 
@@ -136,7 +136,7 @@ parfor i=1:numScenarios
     S_struct.file = file;
 
    
-    [FVr_x,S_y,I_nf] = deopt('nr_fobj_nr_template_3_effects_2_flashes',S_struct);
+    [FVr_x,S_y,I_nf] = deopt(objFunName,S_struct);
    
    
     fclose(file);
