@@ -19,6 +19,9 @@ classdef Stream < handle
         iFlow;
         
         Const;
+        
+        flowBounds = -1;
+        temperatureBounds = -1;
     end
     
     methods
@@ -45,10 +48,21 @@ classdef Stream < handle
             obj.Const = SteamCoefficients();
         end
         function [lb,ub] = getBounds(obj,engine,lb,ub)
-            lb(obj.iFlow) = engine.flowBounds(1);
-            ub(obj.iFlow) = engine.flowBounds(2);
-            lb(obj.iTemperature) = engine.temperatureBounds(1);
-            ub(obj.iTemperature) = engine.temperatureBounds(2);
+            if obj.flowBounds == -1
+                lb(obj.iFlow) = engine.flowBounds(1);
+                ub(obj.iFlow) = engine.flowBounds(2);                
+            else
+                lb(obj.iFlow) = obj.flowBounds(1);
+                ub(obj.iFlow) = obj.flowBounds(2);
+            end
+            
+            if obj.temperatureBounds == -1
+                lb(obj.iTemperature) = engine.temperatureBounds(1);
+                ub(obj.iTemperature) = engine.temperatureBounds(2);
+            else
+                lb(obj.iTemperature) = obj.temperatureBounds(1);
+                ub(obj.iTemperature) = obj.temperatureBounds(2);
+            end
         end
         function y = preallocateVariables(obj,startingIndex)
             obj.iTemperature = startingIndex;

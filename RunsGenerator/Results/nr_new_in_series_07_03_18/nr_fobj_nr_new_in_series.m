@@ -41,12 +41,12 @@ function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)
     
     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
     
-    [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
-    if exitflag > 0
-        disp('solved easy problem')
-        FVr_temp = real(xSolved);
-    end
-    
+%     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
+%     if exitflag > 0
+%         disp('solved easy problem')
+%         FVr_temp = real(xSolved);
+%     end
+%     
 
     [xSolved,fval,exitflag,output,jacob] = fsolve(fx,x,op);
     
