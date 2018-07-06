@@ -8,13 +8,13 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_new_in_series.m';
+scenarioName = 'nr_esa_series_or_parallel.m';
 run(scenarioName);
 
 
-identifier = 'nr_new_in_series';
+identifier = 'nr_esa_series_or_parallel';
 
-objFunName = 'nr_fobj_nr_new_in_series';
+objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 
 maxIterations = 1e6;
 
@@ -24,7 +24,7 @@ maximumF = 0.6;
 pointsF = 3;
 
 minimumNpop = 10;
-maximumNpop = 10;
+maximumNpop = 30;
 pointsNpop = 3;
 
 minimumCR = 0.9;
@@ -66,9 +66,9 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 %% Create a parpool and spawn threads
 
 nCores = 12;
-pool = parpool(nCores);
+% pool = parpool(nCores);
 
-parfor i=1:numScenarios
+for i=1:numScenarios
     
     S_struct = struct;
 

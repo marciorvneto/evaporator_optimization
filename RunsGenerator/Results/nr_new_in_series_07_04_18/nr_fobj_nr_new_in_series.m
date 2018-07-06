@@ -24,8 +24,11 @@ function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)
     
     
     Vout.temperature = FVr_temp(end);
-    VSpl.percentToFirstStream = FVr_temp(end-1);
-    LSpl.percentToFirstStream = FVr_temp(end-2);
+    
+    integerFractions = @(x) x>0.5;
+    
+    VSpl.percentToFirstStream = integerFractions(FVr_temp(end-1));
+    LSpl.percentToFirstStream = integerFractions(FVr_temp(end-2));
     
 %     VSpl.percentToFirstStream = 0.5;
 %     LSpl.percentToFirstStream = 0.5;
@@ -35,7 +38,7 @@ function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)
     Evap = engine.addInfo.Evap;
     
     x = FVr_temp(1:end-3);
-    splits = FVr_temp(end-2:end-1);
+    splits = integerFractions(FVr_temp(end-2:end-1));
     vaporTemperature = FVr_temp(end);
     
     

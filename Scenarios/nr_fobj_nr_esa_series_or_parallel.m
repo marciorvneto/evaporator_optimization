@@ -12,50 +12,46 @@
 %                   S_MSE.I_no   (O)    Number of objectives.
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)    
+function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)    
 
-    engine = S_struct.engine;
+    engine = S_struct.engine; 
     
     Vout = engine.addInfo.Vout;
     Vin = engine.addInfo.Vin;
     
-    VSpl = engine.addInfo.VSpl;
-    LSpl = engine.addInfo.LSpl;
+    EPAR = engine.addInfo.EPAR;
+    ESER = engine.addInfo.ESER;
+
+    BLToPar = engine.addInfo.BLToPar;
+    BLToSer = engine.addInfo.BLToSer;
     
+    LSpl1 = engine.addInfo.LSpl1;
+    VSpl0 = engine.addInfo.VSpl0;    
+    LSpl3 = engine.addInfo.LSpl3;
+    LSpl2 = engine.addInfo.LSpl2;
+    VSpl4 = engine.addInfo.VSpl4;
     
-    Vout.temperature = FVr_temp(end);
-    
-%     integerFractions = @(x) x>0.5;
-    integerFractions = @(x) x;
-    
-    VSpl.percentToFirstStream = integerFractions(FVr_temp(end-1));
-    LSpl.percentToFirstStream = integerFractions(FVr_temp(end-2));
-    
-%     VSpl.percentToFirstStream = 0.5;
-%     LSpl.percentToFirstStream = 0.5;
-    
-    VToNewEvap = engine.addInfo.VToNewEvap;
-    
-    Evap = engine.addInfo.Evap;
-    
-    x = FVr_temp(1:end-3);
-    splits = integerFractions(FVr_temp(end-2:end-1));
+    x = FVr_temp(1:end-6);
+    splits = FVr_temp(end-5:end-1);
     vaporTemperature = FVr_temp(end);
+    
+    Vout.temperature = vaporTemperature;    
+    LSpl1.percentToFirstStream = FVr_temp(end-1);
+    VSpl0.percentToFirstStream = FVr_temp(end-2);
+    LSpl3.percentToFirstStream = FVr_temp(end-3);
+    LSpl2.percentToFirstStream = FVr_temp(end-4);
+    VSpl4.percentToFirstStream = FVr_temp(end-5);    
+  
+    
     
     
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
-    
-%     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
-%     if exitflag > 0
-%         disp('solved easy problem')
-%         x = real(xSolved);
-%     end
-%     
 
     [xSolved,fval,exitflag,output,jacob] = fsolve(fx,x,op);
+    xSolved = real(xSolved);
     
     fprintf(1,'Exitflag: %d\n',exitflag);    
     
@@ -63,21 +59,27 @@ function S_MSE= nr_fobj_nr_new_in_series(FVr_temp, S_struct)
     S_MSE.I_nc      = 0;%no constraints
     S_MSE.FVr_ca    = 0;%no constraint array
     S_MSE.I_no      = 1;%number of objectives (costs)
-    S_MSE.actualValue = real(xSolved);
+    S_MSE.actualValue = xSolved;
     
-    allPositive = (sum(real(xSolved)>0) == length(xSolved));
+    allPositive = (sum(xSolved>0) == length(xSolved));
+    
+    n = 3;
+    originalArea = xSolved(E0.iA);
+    areaSer = xSolved(ESER.iA);
+    areaPar = xSolved(EPAR.iA);
+    flowToPar = xSolved(BLToPar.iFlow);
+    flowToSer = xSolved(BLToSer.iFlow);
+    A = originalArea;
+    if flowToPar > 0.01
+        A = A + areaPar;
+    end
+    if flowToSer > 0.01
+        A = A + areaSer;
+    end
     
     if exitflag > 0 && allPositive
-        flowToNewEvap = xSolved(VToNewEvap.iFlow);
-        if flowToNewEvap < 0.01
-            n = 3;
-        else
-            n = 4;
-        end
-        area = n*xSolved(Evap.iA);  
-        cost = 10000 +324*area^0.91;
+        cost = 30000 +1000*A^0.9;
         S_MSE.FVr_oa(1) = cost;
-%         S_MSE.FVr_oa(1) =norm(fval);
     else
         S_MSE.FVr_oa(1) = 1e12;
         

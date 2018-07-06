@@ -3,11 +3,13 @@ classdef VMixer < Block
     %   Mixes a collection of streams into a single one
     
     properties
+        condensate;
     end
     
     methods
         function obj = VMixer(name)
             obj = obj@Block(name);
+            obj.condensate = false;
         end
         function y = numEquations(obj)
             y = 3 + (length(obj.inStreams) - 1); 
@@ -38,12 +40,21 @@ classdef VMixer < Block
                 currentStream = inStreams{n};
                 Fin(n) = var(currentStream.iFlow);
                 Tin(n) = var(currentStream.iTemperature);
-                Hin(n) = hVSatT(Tin(n),obj.Const);
+                if obj.condensate
+                    Hin(n) = hLSatT(Tin(n),obj.Const);                    
+                else
+                    Hin(n) = hVSatT(Tin(n),obj.Const);
+                end
             end
            
             Fout = var(vaporOut.iFlow);
             Tout = var(vaporOut.iTemperature);
-            Hout =  hVSatT(Tout,obj.Const);
+            if obj.condensate
+                Hout =  hLSatT(Tout,obj.Const);
+            else
+                Hout =  hVSatT(Tout,obj.Const);
+            end
+            
             
             % System of equations
             

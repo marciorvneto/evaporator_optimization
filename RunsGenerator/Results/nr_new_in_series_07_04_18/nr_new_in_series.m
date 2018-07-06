@@ -5,10 +5,10 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 
 %% Defining blocks
-E1 = Evaporator(1.6,1000.0,'EVAP-1');
-E0 = Evaporator(2.0,1000.0,'EVAP-0');
-E3 = Evaporator(1.2,1000.0,'EVAP-3');
-E2 = Evaporator(1.2,1000.0,'EVAP-2');
+E1 = Evaporator(1.0,1000.0,'EVAP-1');
+E0 = Evaporator(1.0,1000.0,'EVAP-0');
+E3 = Evaporator(1.0,1000.0,'EVAP-3');
+E2 = Evaporator(1.0,1000.0,'EVAP-2');
 F1 = Flash('FLASH-1');
 F0 = Flash('FLASH-0');
 LMix1 = LMixer('MIX-1');
