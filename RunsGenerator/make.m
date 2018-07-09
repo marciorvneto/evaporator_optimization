@@ -8,11 +8,11 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_esa_series_or_parallel.m';
+scenarioName = 'nr_esa_series_or_parallel_correction.m';
 run(scenarioName);
 
 
-identifier = 'nr_esa_series_or_parallel';
+identifier = 'nr_esa_series_or_parallel_correction';
 
 objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 
@@ -20,12 +20,12 @@ maxIterations = 1e6;
 
 
 minimumF = 0.4;
-maximumF = 0.6;
+maximumF = 0.8;
 pointsF = 3;
 
 minimumNpop = 10;
-maximumNpop = 30;
-pointsNpop = 3;
+maximumNpop = 40;
+pointsNpop = 4;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
