@@ -8,11 +8,11 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_esa_series_or_parallel_correction.m';
+scenarioName = 'nr_esa_series_or_parallel_correction_nocmixer.m';
 run(scenarioName);
 
 
-identifier = 'nr_esa_series_or_parallel_correction';
+identifier = 'nr_esa_series_or_parallel_correction_nocmixer';
 
 objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 

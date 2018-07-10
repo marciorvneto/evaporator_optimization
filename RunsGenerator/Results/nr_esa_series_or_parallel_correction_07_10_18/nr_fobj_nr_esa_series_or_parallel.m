@@ -38,17 +38,17 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
     Vout1.temperature = vaporTemperature;
     Vout2.temperature = vaporTemperature;
-    LSpl1.percentToFirstStream = FVr_temp(end-1);
-    VSpl0.percentToFirstStream = FVr_temp(end-2);
-    LSpl3.percentToFirstStream = FVr_temp(end-3);
-    LSpl2.percentToFirstStream = FVr_temp(end-4);
-    VSpl4.percentToFirstStream = FVr_temp(end-5);
+%     LSpl1.percentToFirstStream = FVr_temp(end-1);
+%     VSpl0.percentToFirstStream = FVr_temp(end-2);
+%     LSpl3.percentToFirstStream = FVr_temp(end-3);
+%     LSpl2.percentToFirstStream = FVr_temp(end-4);
+%     VSpl4.percentToFirstStream = FVr_temp(end-5);
     
-%     LSpl1.percentToFirstStream = 0.5;
-%     VSpl0.percentToFirstStream = 0.5;
-%     LSpl3.percentToFirstStream = 0.5;
-%     LSpl2.percentToFirstStream = 0;
-%     VSpl4.percentToFirstStream = 0;    
+    LSpl1.percentToFirstStream = 0.5;
+    VSpl0.percentToFirstStream = 0.5;
+    LSpl3.percentToFirstStream = 0.5;
+    LSpl2.percentToFirstStream = 0;
+    VSpl4.percentToFirstStream = 0;    
   
     
     
