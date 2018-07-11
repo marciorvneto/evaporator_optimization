@@ -6,10 +6,11 @@ for n=1:numFiles
    fileName = allFiles(n).name ;
    [gen,fobj] = parseResults(fileName);
    fig = figure('visible','off');
-   plot(gen,log10(fobj));
+   converged = find(fobj<1e12);
+   plot(gen(converged),fobj(converged));
    title(strrep(fileName,'_','-'));
    xlabel('Generations')
-   ylabel('log_{10}(f_{obj})')
+   ylabel('f_{obj}')
    saveas(fig,[fileName,'.png'])   
 end
   

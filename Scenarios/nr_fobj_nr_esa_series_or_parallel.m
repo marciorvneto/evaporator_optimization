@@ -69,8 +69,12 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.I_no      = 1;%number of objectives (costs)
     S_MSE.actualValue = xSolved;
     
-    allPositive = (sum(xSolved>0) == length(xSolved));
-    
+    penalty = 0;
+    if exitflag <= 0
+        penalty = penalty + 1e15;
+    end
+    penalty = penalty + 1e12*sum(xSolved<0);
+  
     n = 3;
     originalArea = xSolved(E0.iA);
     areaSer = xSolved(ESER.iA);
@@ -85,13 +89,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
         A = A + areaSer;
     end
     
-    if exitflag > 0 && allPositive
-        cost = 30000 +1000*A^0.9;
-        S_MSE.FVr_oa(1) = cost;
-    else
-        S_MSE.FVr_oa(1) = 1e12;
-        
-    end
+    cost = 30000 +1000*A^0.9;
+    S_MSE.FVr_oa(1) = cost + penalty;
+    
     S_MSE.convergedX = real([xSolved(:);splits(:);vaporTemperature]);
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
