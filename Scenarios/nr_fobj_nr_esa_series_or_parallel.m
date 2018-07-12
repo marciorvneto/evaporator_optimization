@@ -75,22 +75,27 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     end
     penalty = penalty + 1e12*sum(xSolved<0);
   
-    n = 3;
+    numEvaps = 3;
     originalArea = xSolved(E0.iA);
     areaSer = xSolved(ESER.iA);
     areaPar = xSolved(EPAR.iA);
     flowToPar = xSolved(BLToPar.iFlow);
     flowToSer = xSolved(BLToSer.iFlow);
-    A = originalArea;
+    A = numEvaps * originalArea;
     if flowToPar > 0.01
         A = A + areaPar;
     end
     if flowToSer > 0.01
         A = A + areaSer;
     end
-    
     cost = 30000 +1000*A^0.9;
-    S_MSE.FVr_oa(1) = cost + penalty;
+    
+    if sum(xSolved<0) < 1
+        S_MSE.FVr_oa(1) = cost;
+    else
+        S_MSE.FVr_oa(1) = penalty;
+    end
+   
     
     S_MSE.convergedX = real([xSolved(:);splits(:);vaporTemperature]);
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
