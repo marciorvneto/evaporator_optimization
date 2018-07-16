@@ -8,13 +8,13 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_esa_series_or_parallel_correction_nocmixer.m';
+scenarioName = 'nr_daniel.m';
 run(scenarioName);
 
 
-identifier = 'nr_esa_series_or_parallel_correction_nocmixer';
+identifier = 'nr_daniel';
 
-objFunName = 'nr_fobj_nr_esa_series_or_parallel';
+objFunName = 'nr_fobj_daniel';
 
 maxIterations = 1e6;
 
@@ -23,7 +23,7 @@ minimumF = 0.4;
 maximumF = 0.8;
 pointsF = 3;
 
-minimumNpop = 10;
+minimumNpop = 20;
 maximumNpop = 40;
 pointsNpop = 4;
 
