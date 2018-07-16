@@ -65,7 +65,7 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 
 %% Create a parpool and spawn threads
 
-nCores = 12;
+nCores = 2;
 pool = parpool(nCores);
 
 parfor i=1:numScenarios
