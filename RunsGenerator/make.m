@@ -68,7 +68,7 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 nCores = 12;
 pool = parpool(nCores);
 
-for i=1:numScenarios
+parfor i=1:numScenarios
     
     S_struct = struct;
 
