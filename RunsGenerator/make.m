@@ -8,15 +8,15 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_daniel.m';
+scenarioName = 'nr_esa_series_or_parallel_correction_nocmixer.m';
 run(scenarioName);
 
+identifier = 'nr_esa_series_or_parallel_correction_nocmixer';
 
-identifier = 'nr_daniel';
+objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 
-objFunName = 'nr_fobj_daniel';
-
-maxIterations = 1e6;
+% maxIterations = 1e6;
+maxNFE = 15e6;
 
 
 minimumF = 0.4;
@@ -24,8 +24,8 @@ maximumF = 0.8;
 pointsF = 3;
 
 minimumNpop = 20;
-maximumNpop = 40;
-pointsNpop = 4;
+maximumNpop = 60;
+pointsNpop = 3;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
@@ -65,7 +65,7 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 
 %% Create a parpool and spawn threads
 
-% nCores = 2;
+nCores = 12;
 pool = parpool(nCores);
 
 for i=1:numScenarios
@@ -102,7 +102,7 @@ for i=1:numScenarios
     
     %% Edit
     
-    maxIterations = 5e7/Npop;
+    maxIterations = maxNFE/Npop;
     
     
     F_VTR = -inf;

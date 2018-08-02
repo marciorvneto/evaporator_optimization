@@ -324,10 +324,8 @@ Vout2.fixedPressure = true;
 
 %% Bounds
 
-% engine.QBounds = [6.1e3,61.4e3];
-engine.QBounds = [1e2,61.4e4]; %Maybe....
-% engine.ABounds = [185,12283];
-engine.ABounds = [185,120283];
+engine.QBounds = [6.1e3,61.4e3];
+engine.ABounds = [185,12283];
 engine.x_disBounds = [0.10,0.6];
 engine.x_totBounds = [0.10,0.6];
 engine.pressureBounds = [80,320];
