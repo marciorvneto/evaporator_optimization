@@ -16,7 +16,7 @@ identifier = 'nr_esa_series_or_parallel_correction_nocmixer';
 objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 
 % maxIterations = 1e6;
-maxNFE = 15e6;
+maxNFE = 5000;
 
 
 minimumF = 0.4;
@@ -98,11 +98,10 @@ for i=1:numScenarios
     file = fopen(filePath,'a');
 
 
-    F_VTR = 1e-10;
-    
+   
     %% Edit
     
-    maxIterations = maxNFE/Npop;
+    maxIterations = ceil(maxNFE/Npop);
     
     
     F_VTR = -inf;
