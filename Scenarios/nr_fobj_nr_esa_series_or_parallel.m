@@ -75,7 +75,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     end
     penalty = penalty + 1e12*sum(xSolved<0);
   
-    originalArea = 3*xSolved(E0.iA);
+    numEvaps = 3;
+    
+    originalArea = xSolved(E0.iA);
     areaSer = xSolved(ESER.iA);
     areaPar = xSolved(EPAR.iA);
     flowToPar = xSolved(BLToPar.iFlow);
