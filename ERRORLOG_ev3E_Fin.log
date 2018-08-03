@@ -1,0 +1,19 @@
+Matlab version R2013b is now in use. Remember not to start matlab or run calculations on login node.
+matlab is started with -nojvm -nodisplay -nosplash options.
+{Error using nr_fobj_nr_esa_series_or_parallel (line 83)
+An UndefinedFunction error was thrown on the workers for 'numEvaps'.  This
+might be because the file containing 'numEvaps' is not accessible on the
+workers.  Use addAttachedFiles(pool, files) to specify the required files to be
+attached.  See the documentation for 'parallel.Pool/addAttachedFiles' for more
+details.
+
+Error in deopt (line 130)
+S_val(1)       = feval(fname,FM_pop(I_best_index,:),S_struct);
+
+Error in make (line 72)
+parfor i=1:numScenarios
+
+Caused by:
+    Undefined function or variable 'numEvaps'.
+} 
+

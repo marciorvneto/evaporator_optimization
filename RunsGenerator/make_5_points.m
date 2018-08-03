@@ -21,17 +21,17 @@ maxNFE = 5000;
 
 minimumF = 0.4;
 maximumF = 0.8;
-pointsF = 3;
+pointsF = 2;
 
 minimumNpop = 20;
 maximumNpop = 60;
-pointsNpop = 3;
+pointsNpop = 2;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 3;
+numberTrials = 1;
 
 logEveryXIterations = 1;
 
@@ -45,6 +45,9 @@ allCR = linspace(minimumCR,maximumCR,pointsCR);
 allTrials = 1:numberTrials;
 
 scenarios = combvec(allF,allNpop,allCR,allTrials)';
+scenarios = [scenarios;(minimumF+maximumF)/2,(minimumNpop+maximumNpop)/2,(minimumCR+maximumCR)/2,1];
+
+
 numScenarios = size(scenarios,1);
 
 %% Create results folder
@@ -65,7 +68,7 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 
 %% Create a parpool and spawn threads
 
-nCores = 12;
+nCores = 5;
 pool = parpool(nCores);
 fprintf(1,'\nnumScenarios = %10.2f \n',numScenarios);
 
