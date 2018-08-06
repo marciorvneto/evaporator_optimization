@@ -91,7 +91,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     end
     cost = 30000 +1000*A^0.9;
     
-    if sum(xSolved<0) < 1
+    if sum(xSolved<0) < 1 && (exitflag > 0)
         S_MSE.FVr_oa(1) = cost;
     else
         S_MSE.FVr_oa(1) = penalty;
