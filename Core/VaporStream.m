@@ -56,6 +56,12 @@ classdef VaporStream < Stream
             if(obj.saturated)
                 y(end+1) = (var(obj.iPressure)/1000 - satP(var(obj.iTemperature),obj.Const))/100;
             end
+%             if(obj.fixedPressure)
+%                 y(end+1) = (var(obj.iPressure) - obj.pressure)/1;
+%             end
+%             if(obj.saturated)
+%                 y(end+1) = (var(obj.iPressure)/1000 - satP(var(obj.iTemperature),obj.Const))/1;
+%             end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)
 % 

@@ -84,6 +84,12 @@ classdef BLFlash < Block
             y(4) = (TV - TL)/100;
             y(5) = (F*hF - (L*hL + V*HV))/10000;
             y(6) = (PV/1000 - satP(TV,obj.Const))/100;
+%             y(1) = (F - L - V)/1;
+%             y(2) = (F*xDF - L*xDL)/1;
+%             y(3) = (F*xTF - L*xTL)/1;
+%             y(4) = (TV - TL)/100;
+%             y(5) = (F*hF - (L*hL + V*HV))/1;
+%             y(6) = (PV/1000 - satP(TV,obj.Const))/1;
        
           
 

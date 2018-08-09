@@ -70,7 +70,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.actualValue = xSolved;
     
     allPositive = (sum(xSolved<0) < 1);
-    converged = (max(abs(fval)) < 1e-10);
+    converged = (max(abs(fval)) < 1e-7);
     
     penalty = 0;
     if ~converged
@@ -97,7 +97,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
 %     S_MSE.FVr_oa(1) = abs(cost) + penalty;
     
-    if allPositive && converged
+    if allPositive < 1 && converged
         S_MSE.FVr_oa(1) = cost;
     else
         S_MSE.FVr_oa(1) = penalty;

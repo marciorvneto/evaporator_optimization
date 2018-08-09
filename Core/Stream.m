@@ -77,6 +77,12 @@ classdef Stream < handle
             if(obj.fixedTemperature)
                 y(end+1) = (var(obj.iTemperature) - obj.temperature)/100;
             end
+%             if(obj.fixedFlow)
+%                 y(end+1) = (var(obj.iFlow) - obj.flow)/1;
+%             end
+%             if(obj.fixedTemperature)
+%                 y(end+1) = (var(obj.iTemperature) - obj.temperature)/1;
+%             end
         end
         function y = numUnknowns(obj)
             y = 2;

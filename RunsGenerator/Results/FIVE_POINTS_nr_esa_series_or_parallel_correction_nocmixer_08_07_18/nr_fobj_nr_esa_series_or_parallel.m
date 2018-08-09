@@ -69,15 +69,11 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.I_no      = 1;%number of objectives (costs)
     S_MSE.actualValue = xSolved;
     
-    allPositive = (sum(xSolved<0) < 1);
-    converged = (max(abs(fval)) < 1e-10);
-    
     penalty = 0;
-    if ~converged
-        penalty = penalty + 1e12;
+    if exitflag <= 0
+        penalty = penalty + 1e15;% + norm(fval);
     end
-    penalty = penalty + 1e15*sum(xSolved<0);    
-    
+    penalty = penalty + 1e12*sum(xSolved<0);
   
     numEvaps = 3;
     
@@ -95,13 +91,13 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     end
     cost = 30000 +1000*A^0.9;
     
-%     S_MSE.FVr_oa(1) = abs(cost) + penalty;
+    S_MSE.FVr_oa(1) = abs(cost) + penalty;
     
-    if allPositive && converged
-        S_MSE.FVr_oa(1) = cost;
-    else
-        S_MSE.FVr_oa(1) = penalty;
-    end
+%     if (sum(xSolved<0)) < 1 && (exitflag > 0)
+%         S_MSE.FVr_oa(1) = cost;
+%     else
+%         S_MSE.FVr_oa(1) = penalty;
+%     end
    
     
     S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];

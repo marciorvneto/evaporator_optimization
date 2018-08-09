@@ -207,7 +207,7 @@ Vout2.fixedTemperature = true;
 
 %% Bounds
 
-engine.QBounds = [7.3e3,73.e3];
+engine.QBounds = [7.e3,73.e3];
 engine.ABounds = [458,7320];
 engine.x_disBounds = [0.2,0.5];
 engine.x_totBounds = [0.2,0.5];

@@ -188,6 +188,20 @@ classdef Evaporator < Block
             y(10) = (QQ + F*hF - (V*HV + L*hL))/10000;
             y(11) = (TC - satT(PS/1000,obj.Const))/100;
 %             y(11) = (TC - TS)/1;
+
+%             y(1) = (S - C)/1;
+%             y(2) = (F - V - L)/1;
+%             y(3) = (F*xF_dis - L*xL_dis)/1;
+%             y(4) = (F*xF_tot - L*xL_tot)/1;
+%             y(5) = (PS - PC)/1;
+%             y(6) = (TV - (satT(PV/1000,obj.Const) + BPR(xL_dis,PV/1000)))/1;
+% %             y(6) = (TV - (satT(PV/1000)));
+%             y(7) = (TV - TL)/1;
+%             y(8) = (QQ - S*(HS - hC))/1;
+%             y(9) = (QQ - obj.U*AA*(TS-TL))/1;
+%             y(10) = (QQ + F*hF - (V*HV + L*hL))/1;
+%             y(11) = (TC - satT(PS/1000,obj.Const))/1;
+% %             y(11) = (TC - TS)/1;
             
             
             count = 12;

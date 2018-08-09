@@ -56,6 +56,13 @@ classdef VSplitter < Block
             y(4) = (F2 - F2split)/10;
             y(5) = (P1 - Pin)/100;
             y(6) = (P2 - Pin)/100;
+
+%             y(1) = (Tin - T1)/1;
+%             y(2) = (Tin - T2)/1;
+%             y(3) = (F1 - F1split)/1;
+%             y(4) = (F2 - F2split)/1;
+%             y(5) = (P1 - Pin)/1;
+%             y(6) = (P2 - Pin)/1;
             
             
         end
