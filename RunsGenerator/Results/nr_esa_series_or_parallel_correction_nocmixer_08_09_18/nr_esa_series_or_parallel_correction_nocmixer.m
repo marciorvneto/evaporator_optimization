@@ -207,8 +207,8 @@ Vout2.fixedTemperature = true;
 
 %% Bounds
 
-engine.QBounds = [7.3e3,73.e3]*0.5;
-engine.ABounds = [458,7320]*0.5;
+engine.QBounds = [7.3e3,73.e3];
+engine.ABounds = [458,7320];
 engine.x_disBounds = [0.2,0.5];
 engine.x_totBounds = [0.2,0.5];
 engine.temperatureBounds = [40,120]+273.16;
@@ -241,7 +241,6 @@ engine.addInfo = addInfo;
 lb = [lb;0;0;0;0;0;60+273.16];
 ub = [ub;1;1;1;1;1;100+273.16];
 
-[iT,iP] = engine.vaporAndCondensateIndices(engine.handler);
-constants = SteamCoefficients();
+
 
 fun = @(x) engine.evaluateBalances(x,engine.handler);

@@ -52,6 +52,21 @@ classdef Engine < handle
               dof = dof - handler.numEquations(n);
            end
         end
+        
+        function [iT,iP] = vaporAndCondensateIndices(obj,handler)
+            iT=[];
+            iP=[];
+            for n = 1:handler.numStreams()
+                currentStream = handler.getStream(n);                
+                if(strcmp(currentStream.type,'VSTREAM') || strcmp(currentStream.type,'CSTREAM'))
+                    iTemperature = currentStream.iTemperature;
+                    iT=[iT iTemperature];
+                    iPressure = currentStream.iPressure;
+                    iP=[iP iPressure];
+                end
+                
+            end
+        end
 
         function y = getStreams(obj)
             y = obj.handler.streams;

@@ -44,20 +44,12 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     LSpl2.percentToFirstStream = FVr_temp(end-4);
     VSpl4.percentToFirstStream = FVr_temp(end-5);
     
-    iT = S_struct.iT;
-    iP = S_struct.iP;
-    
-    x = fixX(x,iP,iT,S_struct.constants);
-    
 %     LSpl1.percentToFirstStream = 0.5;
 %     VSpl0.percentToFirstStream = 0.5;
 %     LSpl3.percentToFirstStream = 0.5;
 %     LSpl2.percentToFirstStream = 0;
 %     VSpl4.percentToFirstStream = 0;    
   
-%     for n=1:length(iP)
-%        x(iT(n)) = satT(x(iP(n))/1000,S_struct.constants);
-%     end
     
     
     
@@ -78,13 +70,11 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.actualValue = xSolved;
     
     allPositive = (sum(xSolved<0) < 1);
-    converged = (exitflag > 0);
-    
-    fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
+    converged = (max(abs(fval)) < 1e-10);
     
     penalty = 0;
     if ~converged
-        penalty = penalty + 1e12 + norm(fx(xSolved));
+        penalty = penalty + 1e12;
     end
     penalty = penalty + 1e15*sum(xSolved<0);    
     
@@ -112,17 +102,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     else
         S_MSE.FVr_oa(1) = penalty;
     end
-    
-    fprintf(1,'Fobj: %e\n', S_MSE.FVr_oa(1));
    
     
     S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 
-function y = fixX(x,iP,iT,constants)
-    y=x;
-    for n=1:length(iP)
-       y(iT(n)) = satT(x(iP(n))/1000,constants);
-    end
-end

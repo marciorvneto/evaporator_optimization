@@ -133,6 +133,9 @@ parfor i=1:numScenarios
     S_struct.internalConvergence   = true;
 
     S_struct.engine = engine;
+    S_struct.iT = iT;
+    S_struct.iP = iP;
+    S_struct.constants = constants;
     S_struct.file = file;
 
    

@@ -70,7 +70,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.actualValue = xSolved;
     
     allPositive = (sum(xSolved<0) < 1);
-    converged = (max(abs(fval)) < 1e-7);
+    converged = (exitflag > 0);
+    
+    fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
     
     penalty = 0;
     if ~converged
@@ -97,11 +99,13 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
 %     S_MSE.FVr_oa(1) = abs(cost) + penalty;
     
-    if allPositive < 1 && converged
+    if allPositive && converged
         S_MSE.FVr_oa(1) = cost;
     else
         S_MSE.FVr_oa(1) = penalty;
     end
+    
+    fprintf(1,'Fobj: %e\n', S_MSE.FVr_oa(1));
    
     
     S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];

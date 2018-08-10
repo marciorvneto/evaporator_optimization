@@ -12,7 +12,7 @@
 %                   S_MSE.I_no   (O)    Number of objectives.
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)    
+function S_MSE= nr_fobj_nr_esa_series_or_parallel_easy(FVr_temp, S_struct)    
 
     engine = S_struct.engine; 
     
@@ -44,27 +44,22 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     LSpl2.percentToFirstStream = FVr_temp(end-4);
     VSpl4.percentToFirstStream = FVr_temp(end-5);
     
-    iT = S_struct.iT;
-    iP = S_struct.iP;
-    
-    x = fixX(x,iP,iT,S_struct.constants);
-    
 %     LSpl1.percentToFirstStream = 0.5;
 %     VSpl0.percentToFirstStream = 0.5;
 %     LSpl3.percentToFirstStream = 0.5;
 %     LSpl2.percentToFirstStream = 0;
 %     VSpl4.percentToFirstStream = 0;    
   
-%     for n=1:length(iP)
-%        x(iT(n)) = satT(x(iP(n))/1000,S_struct.constants);
-%     end
     
     
     
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-6, 'TolX', 1E-6,'MaxFunEvals',200*length(FVr_temp));
+    
+%     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
+%     a=1;
 
     [xSolved,fval,exitflag,output,jacob] = fsolve(fx,x,op);
     xSolved = real(xSolved);
@@ -80,11 +75,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     allPositive = (sum(xSolved<0) < 1);
     converged = (exitflag > 0);
     
-    fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
-    
     penalty = 0;
     if ~converged
-        penalty = penalty + 1e12 + norm(fx(xSolved));
+        penalty = penalty + 1e12;
     end
     penalty = penalty + 1e15*sum(xSolved<0);    
     
@@ -112,17 +105,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     else
         S_MSE.FVr_oa(1) = penalty;
     end
-    
-    fprintf(1,'Fobj: %e\n', S_MSE.FVr_oa(1));
    
     
     S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 
-function y = fixX(x,iP,iT,constants)
-    y=x;
-    for n=1:length(iP)
-       y(iT(n)) = satT(x(iP(n))/1000,constants);
-    end
-end
