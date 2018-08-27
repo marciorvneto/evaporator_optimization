@@ -153,6 +153,49 @@ classdef Engine < handle
             load(guessName);
             obj.returnVariables(obj.handler,initialGuess);
         end
+        
+        function var = solveEasy(obj,initialGuess)
+            A = obj.adjacencyEasy();
+            [l,u,p,q] = obj.scc(A);
+            original = obj.reversePermutation(q);
+            var = initialGuess;            
+            for n=1:length(l)
+                blockVarIndices = l(n):u(n);
+                originalVarIndices = q(blockVarIndices);
+%                 opt = optimoptions('fsolve','Display','Iter','TolFun', 1E-14, 'TolX', 1E-14,'MaxFunEvals',5000*length(blockVarIndices));                
+                opt = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',15000*length(blockVarIndices),'Algorithm','levenberg-marquardt');                
+%                 opt = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',5000*length(blockVarIndices),'Algorithm','levenberg-marquardt','ScaleProblem','jacobian');                
+                blockEqIndices = l(n):u(n);
+                permuteEqs = @(y) y(p);
+                permuteVars = @(x) x(original);
+                blockIndices = @(y) y(blockEqIndices);
+                eval = @(x) obj.evaluateEasyBalances(x,obj.handler);
+                
+                fullSystem = @(x) eval(obj.substituteVariables(var,x,originalVarIndices));
+                truncatedSystem = @(x) blockIndices(permuteEqs(fullSystem(x)));                
+                [xsol,fval]=fsolve(truncatedSystem,var(originalVarIndices),opt);
+                var = obj.substituteVariables(var,xsol,originalVarIndices);
+            end
+        end
+        
+        function y = originalVariables(obj,p)
+           y = zeros(1,length(p));
+           for n=1:length(p)
+               y(p(n)) = n;
+           end 
+        end
+        
+        function y = reversePermutation(obj,p)
+           y = zeros(1,length(p));
+           for n=1:length(p)
+               y(p(n)) = n;
+           end
+        end
+        
+        function v = substituteVariables(obj,var,x,indices)
+            v = var;
+            v(indices) = x;
+        end
 
         % =========== Math ====================
 %         function obj = run(obj,x0)
@@ -214,7 +257,8 @@ classdef Engine < handle
             % Blocks
             
 %             y = zeros(obj.numUnknowns(handler),1);
-            y = [];
+            n = length(var);
+            y = zeros(n,1);
             start = 1;
             for n = 1:handler.numBlocks()
                 currentBlock = handler.getBlock(n);
@@ -234,8 +278,51 @@ classdef Engine < handle
                 start = endY + 1;
             end
             
-            y = y(:);
+%             y = y(:);
             
+        end
+        
+        function var = replaceFixedValues(obj,handler,var)
+            for n = 1:handler.numStreams()
+                currentStream = handler.getStream(n);
+                var = currentStream.replaceFixedValues(var);
+            end
+        end
+        
+        function A = adjacencyEasy(obj)
+           n = obj.numUnknowns(obj.handler);
+           A = zeros(n,n);
+           i=1;
+           for n = 1:obj.handler.numBlocks()
+                currentBlock = obj.handler.getBlock(n);
+                [A,i] = currentBlock.adjacencyEasy(A,i);
+           end
+           for n = 1:obj.handler.numStreams()
+                currentStream = obj.handler.getStream(n);
+                [A,i] = currentStream.adjacencyEasy(A,i);
+            end
+            
+        end
+        
+        function [l,u,p,q] = scc(~,A)
+            [p,q,r,~,~,~] = dmperm(A);
+%             C = A(p,q);
+            l=[];
+            u=[];
+            n = 1;
+            while n<length(r)
+               l = [l,r(n)]; 
+               u = [u,r(n+1)-1];
+%                figure(1)
+%                spy(C,'k')
+%                hold on
+%                B = zeros(size(A));
+%                B(r(n):r(n+1)-1,r(n):r(n+1)-1) = 1;
+%                spy(B,'r')
+%                hold off
+               n=n+1;
+            end            
+                    
         end
 
         function [A,b] = linearConstraints(obj,handler)

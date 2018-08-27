@@ -180,7 +180,6 @@ engine.preallocateVariables(engine.handler);
 
 %% Defining constants
 
-E0.fixedA = true;
 E1.areaEqualTo = E0;
 E2.areaEqualTo = E0;
 
@@ -188,7 +187,7 @@ S.temperature = 120 + 273.16;
 S.fixedTemperature = true;
 S.saturated = true;
 
-F.flow = 50*(1+15/100);
+F.flow = 50;
 F.x_dis = 0.2;
 F.x_tot = 0.2;
 F.temperature = 40 + 273.16;
@@ -203,12 +202,11 @@ Lout.fixedX_Dis = true;
 Vout1.temperature = 60 + 273.16;
 Vout1.fixedTemperature = true;
 
-% Vout2.temperature = 60 + 273.16;
-% Vout2.fixedTemperature = true;
+Vout2.temperature = 60 + 273.16;
+Vout2.fixedTemperature = true;
 
 %% Bounds
 
-engine.flowBounds = [0,50];
 engine.QBounds = [7.3e3,73.e3]*0.5;
 engine.ABounds = [458,7320]*0.5;
 engine.x_disBounds = [0.2,0.5];

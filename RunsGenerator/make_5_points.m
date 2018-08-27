@@ -8,12 +8,19 @@ addpath('../Thermo/SteamTables');
 addpath('../Numerical routines');
 addpath('../Scenarios');
 
-scenarioName = 'nr_esa_series_or_parallel_correction_nocmixer.m';
+% scenarioName = 'nr_esa_series_or_parallel_correction_nocmixer.m';
+% run(scenarioName);
+% 
+% identifier = 'FIVE_POINTS_FIXING_X_nr_esa_series_or_parallel_correction_nocmixer';
+% 
+% objFunName = 'nr_fobj_nr_esa_series_or_parallel';
+
+scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
 run(scenarioName);
 
-identifier = 'FIVE_POINTS_nr_esa_series_or_parallel_correction_nocmixer';
+identifier = 'nr_three_effect_esa_improved_bounds_scen';
 
-objFunName = 'nr_fobj_nr_esa_series_or_parallel';
+objFunName = 'nr_fobj_nr_template_3_effects_2_flashes';
 
 % maxIterations = 1e6;
 maxNFE = 5000;
@@ -23,9 +30,9 @@ minimumF = 0.4;
 maximumF = 0.8;
 pointsF = 2;
 
-minimumNpop = 20;
+minimumNpop = 10;
 maximumNpop = 20;
-pointsNpop = 1;
+pointsNpop = 2;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
@@ -142,9 +149,9 @@ for i=1:numScenarios
     S_struct.internalConvergence   = true;
 
     S_struct.engine = engine;
-    S_struct.iT = iT;
-    S_struct.iP = iP;
-    S_struct.constants = constants;
+%     S_struct.iT = iT;
+%     S_struct.iP = iP;
+%     S_struct.constants = constants;
     S_struct.file = file;
 
    

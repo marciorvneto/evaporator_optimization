@@ -1,8 +1,8 @@
 function [xFinal,solved] = solveGlobalNR(fun,x0,n,rate)
 %Globally convergent Newton-Raphson method
 
-xOld = x0;
-xNew = x0;
+xOld = x0(:);
+xNew = x0(:);
 count = 0;
 solved = false;
 

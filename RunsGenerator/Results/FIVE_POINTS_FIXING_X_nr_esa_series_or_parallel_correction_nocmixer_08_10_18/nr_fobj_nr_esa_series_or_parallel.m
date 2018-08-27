@@ -47,9 +47,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     iT = S_struct.iT;
     iP = S_struct.iP;
     
-%     x = engine.replaceFixedValues(engine.handler,x);
-    
-    x = fixX(x,iP,iT,S_struct.constants,engine);
+    x = fixX(x,iP,iT,S_struct.constants);
     
 %     LSpl1.percentToFirstStream = 0.5;
 %     VSpl0.percentToFirstStream = 0.5;
@@ -66,25 +64,13 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
-    
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',200*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','none');
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',100*length(FVr_temp),'Algorithm','levenberg-marquardt');
 %     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',100*length(FVr_temp),'Algorithm','trust-region-dogleg');
 
     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
     xSolved = real(xSolved);
     
-    if exitflag <= 0
-        S_MSE.I_nc      = 0;%no constraints
-        S_MSE.FVr_ca    = 0;%no constraint array
-        S_MSE.I_no      = 1;%number of objectives (costs)<
-        S_MSE.actualValue = xSolved;
-        S_MSE.FVr_oa(1) = 1e16 + 1e15*sum(xSolved<0);
-        S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];
-        return
-    end
-    
-%     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp),'Algorithm','trust-region-dogleg');
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',300*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','jacobian');
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp),'Algorithm','trust-region-dogleg');
     
     try
         [xSolved,fval,exitflag,output,jacob] = fsolve(fx,xSolved,op);
@@ -102,8 +88,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     S_MSE.actualValue = xSolved;
     
     allPositive = (sum(xSolved<0) < 1);
-%     converged = (exitflag > 0);
-    converged = (norm(fval)/length(xSolved)<1e-10);
+    converged = (exitflag > 0);
     
     fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
     
@@ -145,9 +130,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 
-function y = fixX(x,iP,iT,constants,engine)
-    y = engine.replaceFixedValues(engine.handler,x);
+function y = fixX(x,iP,iT,constants)
+    y=x;
     for n=1:length(iP)
-       y(iP(n)) = satP(x(iT(n)),constants)*1000;
+       y(iT(n)) = satT(x(iP(n))/1000,constants);
     end
 end

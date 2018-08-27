@@ -48,6 +48,15 @@ classdef VaporStream < Stream
             guess(obj.iTemperature) = obj.temperature;
             guess(obj.iPressure) = obj.pressure;
         end
+        function var = replaceFixedValues(obj,var)
+           var = replaceFixedValues@Stream(obj,var);
+           if(obj.fixedPressure)
+                var(obj.iPressure) = obj.pressure;
+           end
+%             if(obj.saturated)
+%                 var(obj.iPressure) = (var(obj.iPressure)/1000 - satP(var(obj.iTemperature),obj.Const));
+%             end
+        end
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
             if(obj.fixedPressure)
@@ -62,6 +71,17 @@ classdef VaporStream < Stream
 %             if(obj.saturated)
 %                 y(end+1) = (var(obj.iPressure)/1000 - satP(var(obj.iTemperature),obj.Const))/1;
 %             end
+        end
+        function [A,i] = adjacencyEasy(obj,A,i)
+            [A,i] = adjacencyEasy@Stream(obj,A,i);
+            if(obj.fixedPressure)
+                A(i,obj.iPressure) = 1;
+                i = i + 1;
+            end
+            if(obj.saturated)
+                A(i,[obj.iPressure,obj.iTemperature]) = 1;
+                i = i + 1;
+            end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)
 % 

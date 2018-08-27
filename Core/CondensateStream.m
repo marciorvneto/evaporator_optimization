@@ -46,14 +46,27 @@ classdef CondensateStream < Stream
             obj.temperature = result(obj.iTemperature);
             obj.pressure = result(obj.iPressure);
         end
+        function var = replaceFixedValues(obj,var)
+           var = replaceFixedValues@Stream(obj,var);
+           if(obj.fixedPressure)
+                var(obj.iPressure) = obj.pressure;
+           end            
+        end
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
             if(obj.fixedPressure)
                 y(end+1) = (var(obj.iPressure) - obj.pressure)/100;
             end
 %             if(obj.fixedPressure)
-%                 y(end+1) = (var(obj.iPressure) - obj.pressure)/1;
+%                 y(end+1) = (var(obj.iPressure) - obj.pressure);
 %             end
+        end
+        function [A,i] = adjacencyEasy(obj,A,i)
+            [A,i] = adjacencyEasy@Stream(obj,A,i);
+            if(obj.fixedPressure)
+                A(i,obj.iPressure) = 1;
+                i = i + 1;
+            end
         end
 %         function [rowA,rowb] = linearConstraints(obj,numVars)
 % 

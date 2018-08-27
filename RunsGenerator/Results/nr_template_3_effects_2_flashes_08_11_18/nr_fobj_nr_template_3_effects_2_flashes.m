@@ -19,7 +19,7 @@ function S_MSE= nr_fobj_nr_template_3_effects_2_flashes(FVr_temp, S_struct)
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
     
-    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',200*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','jacobian');
+    op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-12,'MaxFunEvals',200*length(FVr_temp));
     
 %     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,FVr_temp,op);
 %     if exitflag > 0
@@ -27,30 +27,8 @@ function S_MSE= nr_fobj_nr_template_3_effects_2_flashes(FVr_temp, S_struct)
 %         FVr_temp = real(xSolved);
 %     end
     [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,FVr_temp,op);
-    
-    if exitflag <= 0
-        S_MSE.I_nc      = 0;%no constraints
-        S_MSE.FVr_ca    = 0;%no constraint array
-        S_MSE.I_no      = 1;%number of objectives (costs)
-        S_MSE.actualValue = real(xSolved);
-        S_MSE.convergedX = real(xSolved(:));
-        S_MSE.FVr_oa(1) = 1e12;
-        return
-    end
-    
+
     [xSolved,fval,exitflag,output,jacob] = fsolve(fx,xSolved,op);
-    
-%     G = @(x,l) l*fx(x) + (1-l)*feasy(x);
-%     
-%     L = linspace(0,1,10);
-%     L = L(2:end);
-%         op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',50*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','jacobian');    
-%     for l=L
-%         g = @(x) G(x,l);
-%         [xSolved,fval,exitflag,output,jacob] = fsolve(g,xSolved,op);
-%     end
-    
-    
     
     fprintf(1,'Exitflag: %d\n',exitflag);
     

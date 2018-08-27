@@ -103,7 +103,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
     allPositive = (sum(xSolved<0) < 1);
 %     converged = (exitflag > 0);
-    converged = (norm(fval)/length(xSolved)<1e-10);
+    converged = (norm(fval)/length(xSolved)<1e-5);
     
     fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
     

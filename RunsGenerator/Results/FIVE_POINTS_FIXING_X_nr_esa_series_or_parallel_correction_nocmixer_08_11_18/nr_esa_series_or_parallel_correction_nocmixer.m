@@ -188,7 +188,7 @@ S.temperature = 120 + 273.16;
 S.fixedTemperature = true;
 S.saturated = true;
 
-F.flow = 50*(1+15/100);
+F.flow = 50;
 F.x_dis = 0.2;
 F.x_tot = 0.2;
 F.temperature = 40 + 273.16;

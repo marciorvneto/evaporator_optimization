@@ -54,6 +54,15 @@ classdef LiquidStream < Stream
             obj.x_dis = result(obj.iX_dis);
             obj.x_tot = result(obj.iX_tot);
         end
+        function var = replaceFixedValues(obj,var)
+           var = replaceFixedValues@Stream(obj,var);
+           if(obj.fixedX_Dis)
+                var(obj.iX_dis) = obj.x_dis;
+           end
+           if(obj.fixedX_Tot)
+                var(obj.iX_tot) = obj.x_tot;
+           end
+        end
         function y = evaluate(obj,var)
             y = evaluate@Stream(obj,var);
             if(obj.fixedX_Dis)
@@ -61,6 +70,17 @@ classdef LiquidStream < Stream
             end
             if(obj.fixedX_Tot)
                 y(end+1) = var(obj.iX_tot) - obj.x_tot;
+            end
+        end
+        function [A,i] = adjacencyEasy(obj,A,i)
+            [A,i] = adjacencyEasy@Stream(obj,A,i);
+            if(obj.fixedX_Dis)
+                A(i,obj.iX_dis) = 1;
+                i = i + 1;
+            end
+            if(obj.fixedX_Tot)
+                A(i,obj.iX_tot) = 1;
+                i = i + 1;
             end
         end
         function [rowA,rowb] = linearConstraints(obj,numVars)

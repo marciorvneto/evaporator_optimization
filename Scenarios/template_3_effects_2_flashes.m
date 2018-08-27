@@ -73,3 +73,11 @@ handler.connectBlocks(E1,VMix3,V8);
 %% Creating the simulation engine
 engine = Engine(handler);
 engine.preallocateVariables(engine.handler);
+
+engine.QBounds = [7.3e3,73.e3]*0.5;
+engine.ABounds = [458,7320]*0.5;
+engine.x_disBounds = [0.2,0.5];
+engine.x_totBounds = [0.2,0.5];
+engine.temperatureBounds = [40,120]+273.16;
+engine.pressureBounds = [satP(engine.temperatureBounds(1),SteamCoefficients())
+                         satP(engine.temperatureBounds(2),SteamCoefficients())]*1000;

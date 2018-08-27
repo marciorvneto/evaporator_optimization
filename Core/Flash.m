@@ -74,9 +74,9 @@ classdef Flash < Block
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = (F - L - V)/10;
+            y(1) = (F - L - V)/1;
             y(2) = (TV - TL)/100;
-            y(3) = (F*hF - (L*hL + V*HV))/10000;
+            y(3) = (F*hF - (L*hL + V*HV))/1000;
             y(4) = (PV/1000 - satP(TV,obj.Const))/100;
             y(5) = (PL/1000 - satP(TV,obj.Const))/100; 
 
@@ -107,24 +107,49 @@ classdef Flash < Block
             
             PV = var(vaporOut.iPressure);
             PL = var(liquidOut.iPressure);
-           
-            
-            % Enthalpies
             
             hL = hLSatT(TV,obj.Const);
             hF = hLSatT(TF,obj.Const);
             HV = hVSatT(TV,obj.Const);
-            
+           
+           
             % System of equations
             
             y = zeros(obj.numEquations(),1);
-            y(1) = (F - L - V)/10;
-            y(2) = (TV - TL)/10;
-            y(3) = (F*100 - (L*100 + V*2300))/10000;
+%             y(1) = (F - L - V);
+%             y(2) = (TV - TL);
+%             y(3) = (F*100 - (L*100 + V*2300));
+%             y(4) = (PV/1000 - satP(TV,obj.Const));
+%             y(5) = (PL/1000 - satP(TV,obj.Const));         
+            
+            y(1) = (F - L - V)/1;
+            y(2) = (TV - TL)/100;
+            y(3) = (F*hF - (L*hL + V*HV))/1000;
             y(4) = (PV/1000 - satP(TV,obj.Const))/100;
-            y(5) = (PL/1000 - satP(TV,obj.Const))/100;            
+            y(5) = (PL/1000 - satP(TV,obj.Const))/100;   
           
 
+        end
+        
+        function [A,i] = adjacencyEasy(obj,A,i)
+            liquidOut = obj.liquidOut();
+            vaporOut = obj.vaporOut();
+            condensateIn = obj.condensateIn();
+            
+            indices1 = [condensateIn.iFlow,liquidOut.iFlow,vaporOut.iFlow];
+            indices2 = [liquidOut.iTemperature,vaporOut.iTemperature];
+            indices3 = [condensateIn.iFlow,liquidOut.iFlow,vaporOut.iFlow,vaporOut.iTemperature,condensateIn.iTemperature];
+            indices4 = [vaporOut.iPressure,vaporOut.iTemperature];
+            indices5 = [liquidOut.iPressure,vaporOut.iTemperature];
+            
+            A(i,indices1) = 1;
+            A(i+1,indices2) = 1;
+            A(i+2,indices3) = 1;
+            A(i+3,indices4) = 1;
+            A(i+4,indices5) = 1;
+            
+            i = i + 5;
+            
         end
         
         function [rowA,rowb] = linearConstraints(obj,numVars)

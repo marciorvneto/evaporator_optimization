@@ -69,10 +69,18 @@ classdef Stream < handle
             obj.iFlow = startingIndex + 1;
             y = startingIndex + 2;
         end
+        function var = replaceFixedValues(obj,var)
+           if(obj.fixedFlow)
+                var(obj.iFlow) = obj.flow;
+           end
+            if(obj.fixedTemperature)
+                var(obj.iTemperature) = obj.temperature;
+            end
+        end
         function y = evaluate(obj,var)
             y = [];
             if(obj.fixedFlow)
-                y(end+1) = (var(obj.iFlow) - obj.flow)/10;
+                y(end+1) = (var(obj.iFlow) - obj.flow)/1;
             end
             if(obj.fixedTemperature)
                 y(end+1) = (var(obj.iTemperature) - obj.temperature)/100;
@@ -84,6 +92,18 @@ classdef Stream < handle
 %                 y(end+1) = (var(obj.iTemperature) - obj.temperature)/1;
 %             end
         end
+        
+        function [A,i] = adjacencyEasy(obj,A,i)
+            if(obj.fixedFlow)
+                A(i,obj.iFlow) = 1;
+                i = i + 1;
+            end
+            if(obj.fixedTemperature)
+                A(i,obj.iTemperature) = 1;
+                i = i + 1;                
+            end
+        end
+        
         function y = numUnknowns(obj)
             y = 2;
         end

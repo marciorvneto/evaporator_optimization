@@ -47,9 +47,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     iT = S_struct.iT;
     iP = S_struct.iP;
     
-%     x = engine.replaceFixedValues(engine.handler,x);
+    x = engine.replaceFixedValues(engine.handler,x);
     
-    x = fixX(x,iP,iT,S_struct.constants,engine);
+    x = fixX(x,iP,iT,S_struct.constants);
     
 %     LSpl1.percentToFirstStream = 0.5;
 %     VSpl0.percentToFirstStream = 0.5;
@@ -78,7 +78,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
         S_MSE.FVr_ca    = 0;%no constraint array
         S_MSE.I_no      = 1;%number of objectives (costs)<
         S_MSE.actualValue = xSolved;
-        S_MSE.FVr_oa(1) = 1e16 + 1e15*sum(xSolved<0);
+        S_MSE.FVr_oa(1) = 1e15*sum(xSolved<0);
         S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];
         return
     end
@@ -103,7 +103,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
     allPositive = (sum(xSolved<0) < 1);
 %     converged = (exitflag > 0);
-    converged = (norm(fval)/length(xSolved)<1e-10);
+    converged = (norm(fval)/length(xSolved));
     
     fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
     
@@ -145,9 +145,9 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
 %     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 
-function y = fixX(x,iP,iT,constants,engine)
-    y = engine.replaceFixedValues(engine.handler,x);
+function y = fixX(x,iP,iT,constants)
+    y=x;
     for n=1:length(iP)
-       y(iP(n)) = satP(x(iT(n)),constants)*1000;
+       y(iT(n)) = satT(x(iP(n))/1000,constants);
     end
 end

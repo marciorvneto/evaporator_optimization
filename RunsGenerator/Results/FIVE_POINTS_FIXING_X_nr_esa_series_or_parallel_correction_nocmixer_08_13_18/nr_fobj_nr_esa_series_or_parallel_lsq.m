@@ -12,7 +12,10 @@
 %                   S_MSE.I_no   (O)    Number of objectives.
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)    
+function S_MSE= nr_fobj_nr_esa_series_or_parallel_lsq(FVr_temp, S_struct)
+
+    lb = S_struct.FVr_minbound(1:148);
+    ub = S_struct.FVr_maxbound(1:148);
 
     engine = S_struct.engine; 
     
@@ -70,7 +73,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',200*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','none');
 %     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',100*length(FVr_temp),'Algorithm','trust-region-dogleg');
 
-    [xSolved,fval,exitflag,output,jacob] = fsolve(feasy,x,op);
+    [xSolved,resnorm,residual,exitflag,output] = lsqnonlin(feasy,x,lb,ub,op);
     xSolved = real(xSolved);
     
     if exitflag <= 0
@@ -103,7 +106,7 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     
     allPositive = (sum(xSolved<0) < 1);
 %     converged = (exitflag > 0);
-    converged = (norm(fval)/length(xSolved)<1e-10);
+    converged = (norm(fval)/length(xSolved)<1e-5);
     
     fprintf(1,'>>>>> Converged: %d | Positive: %d <<<<<<<<\n',converged,allPositive);
     
