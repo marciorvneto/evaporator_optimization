@@ -15,30 +15,37 @@ addpath('../Scenarios');
 % 
 % objFunName = 'nr_fobj_nr_esa_series_or_parallel';
 
-scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
+% scenarioName = 'nr_three_effect_esa_improved_bounds_scen.m';
+% run(scenarioName);
+% 
+% identifier = 'nr_three_effect_esa_improved_bounds_scen';
+% 
+% objFunName = 'nr_fobj_nr_template_3_effects_2_flashes';
+
+scenarioName = 'nr_daniel.m';
 run(scenarioName);
 
-identifier = 'nr_three_effect_esa_improved_bounds_scen';
+identifier = 'nr_daniel_scen';
 
-objFunName = 'nr_fobj_nr_template_3_effects_2_flashes';
+objFunName = 'nr_fobj_daniel_new';
 
 % maxIterations = 1e6;
 maxNFE = 5000;
 
 
-minimumF = 0.4;
+minimumF = 0.8;
 maximumF = 0.8;
-pointsF = 2;
+pointsF = 1;
 
-minimumNpop = 10;
-maximumNpop = 20;
-pointsNpop = 2;
+minimumNpop = 30;
+maximumNpop = 30;
+pointsNpop = 1;
 
 minimumCR = 0.9;
 maximumCR = 0.9;
 pointsCR = 1;
 
-numberTrials = 1;
+numberTrials = 4;
 
 logEveryXIterations = 1;
 
@@ -52,7 +59,7 @@ allCR = linspace(minimumCR,maximumCR,pointsCR);
 allTrials = 1:numberTrials;
 
 scenarios = combvec(allF,allNpop,allCR,allTrials)';
-scenarios = [scenarios;(minimumF+maximumF)/2,(minimumNpop+maximumNpop)/2,(minimumCR+maximumCR)/2,1];
+% scenarios = [scenarios;(minimumF+maximumF)/2,(minimumNpop+maximumNpop)/2,(minimumCR+maximumCR)/2,1];
 
 
 numScenarios = size(scenarios,1);
@@ -75,10 +82,11 @@ copyfile(['../Scenarios/',objFunName,'.m'],[pathToFolder,'/',objFunName,'.m'])
 
 %% Create a parpool and spawn threads
 
-nCores = 2;
-% pool = parpool(nCores);
+%nCores = 16;
+%pool = parpool(nCores);
 fprintf(1,'\nnumScenarios = %10.2f \n',numScenarios);
 
+%par
 for i=1:numScenarios
     
     S_struct = struct;
@@ -146,16 +154,18 @@ for i=1:numScenarios
     S_struct.I_strategy   = I_strategy;
     S_struct.I_refresh    = I_refresh;
     S_struct.I_plotting   = I_plotting;
+    S_struct.FVr_discr = zeros(1,I_D);
+    S_struct.StallGenLim = 1e20;
     S_struct.internalConvergence   = true;
 
     S_struct.engine = engine;
-%     S_struct.iT = iT;
-%     S_struct.iP = iP;
-%     S_struct.constants = constants;
+    S_struct.iT = iT;
+    S_struct.iP = iP;
+    S_struct.constants = constants;
     S_struct.file = file;
 
    
-    [FVr_x,S_y,I_nf] = deopt(objFunName,S_struct);
+    [FVr_x,S_y,I_nf] = pardeopt(objFunName,S_struct);
    
    
     fclose(file);

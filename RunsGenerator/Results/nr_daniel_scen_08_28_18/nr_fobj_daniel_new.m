@@ -12,60 +12,50 @@
 %                   S_MSE.I_no   (O)    Number of objectives.
 %                   S_MSE.FVr_oa (O)    Objective function values.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)    
+function S_MSE= nr_fobj_daniel_new(FVr_temp, S_struct)    
 
     engine = S_struct.engine; 
     
     Vout1 = engine.addInfo.Vout1;
     Vout2 = engine.addInfo.Vout2;
     
-    E0 = engine.addInfo.E0;
     EPAR = engine.addInfo.EPAR;
     ESER = engine.addInfo.ESER;
 
     BLToPar = engine.addInfo.BLToPar;
     BLToSer = engine.addInfo.BLToSer;
     
-    LSpl1 = engine.addInfo.LSpl1;
-    VSpl0 = engine.addInfo.VSpl0;    
+    VSpl1 = engine.addInfo.VSpl1;
+    VSpl0 = engine.addInfo.VSpl0;
     LSpl3 = engine.addInfo.LSpl3;
     LSpl2 = engine.addInfo.LSpl2;
-    VSpl4 = engine.addInfo.VSpl4;
+    LSpl5 = engine.addInfo.LSpl5;
+    LSpl7 = engine.addInfo.LSpl7;
+    VSpl9 = engine.addInfo.VSpl9;
     
-    x = FVr_temp(1:end-6);
-    splits = FVr_temp(end-5:end-1);
+    x = FVr_temp(1:end-8);
+    splits = FVr_temp(end-7:end-1);
     vaporTemperature = FVr_temp(end);
     
     Vout1.temperature = vaporTemperature;
     Vout2.temperature = vaporTemperature;
-    LSpl1.percentToFirstStream = FVr_temp(end-1);
+    
+    VSpl1.percentToFirstStream = FVr_temp(end-1);
     VSpl0.percentToFirstStream = FVr_temp(end-2);
     LSpl3.percentToFirstStream = FVr_temp(end-3);
     LSpl2.percentToFirstStream = FVr_temp(end-4);
-    VSpl4.percentToFirstStream = FVr_temp(end-5);
+    LSpl5.percentToFirstStream = FVr_temp(end-5);
+    LSpl7.percentToFirstStream = FVr_temp(end-6);
+    VSpl9.percentToFirstStream = FVr_temp(end-7);
     
     iT = S_struct.iT;
     iP = S_struct.iP;
     
-%     x = engine.replaceFixedValues(engine.handler,x);
-    
     x = fixX(x,iP,iT,S_struct.constants,engine);
-    
-%     LSpl1.percentToFirstStream = 0.5;
-%     VSpl0.percentToFirstStream = 0.5;
-%     LSpl3.percentToFirstStream = 0.5;
-%     LSpl2.percentToFirstStream = 0;
-%     VSpl4.percentToFirstStream = 0;    
-  
-%     for n=1:length(iP)
-%        x(iT(n)) = satT(x(iP(n))/1000,S_struct.constants);
-%     end
-    
-    
+   
     
     fx = @(x) engine.evaluateBalances(x,engine.handler);
     feasy = @(x) engine.evaluateEasyBalances(x,engine.handler);
-    
     
     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-10, 'TolX', 1E-10,'MaxFunEvals',200*length(FVr_temp),'Algorithm','levenberg-marquardt','ScaleProblem','none');
 %     op = optimoptions('fsolve','Display','Iter','TolFun', 1E-12, 'TolX', 1E-12,'MaxFunEvals',100*length(FVr_temp),'Algorithm','trust-region-dogleg');
@@ -111,17 +101,14 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
     if ~converged
         penalty = penalty + 1e12 + norm(fx(xSolved));
     end
-    penalty = penalty + 1e15*sum(xSolved<0);    
-    
+    penalty = penalty + 1e15*sum(xSolved<0);  
   
-    numEvaps = 3;
-    
-    originalArea = xSolved(E0.iA);
+    A = (2*4400+5*8800)*0.00929;
     areaSer = xSolved(ESER.iA);
     areaPar = xSolved(EPAR.iA);
     flowToPar = xSolved(BLToPar.iFlow);
-    flowToSer = xSolved(BLToSer.iFlow);
-    A = numEvaps * originalArea;
+    flowToSer = xSolved(BLToSer.iFlow);    
+
     if flowToPar > 0.01
         A = A + areaPar;
     end
@@ -142,7 +129,6 @@ function S_MSE= nr_fobj_nr_esa_series_or_parallel(FVr_temp, S_struct)
    
     
     S_MSE.convergedX = [xSolved(:);splits(:);vaporTemperature];
-%     S_MSE.FVr_oa(1) = 0.5*(fx'*fx);
 end
 
 function y = fixX(x,iP,iT,constants,engine)
@@ -151,3 +137,4 @@ function y = fixX(x,iP,iT,constants,engine)
        y(iP(n)) = satP(x(iT(n)),constants)*1000;
     end
 end
+

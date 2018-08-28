@@ -111,9 +111,7 @@ classdef BLFlash < Block
             TV = var(vaporOut.iTemperature);
             TL = var(liquidOut.iTemperature);
             
-            PV = var(vaporOut.iPressure);
-            PL = var(liquidOut.iPressure);
-           
+            PV = var(vaporOut.iPressure);          
             
             % Enthalpies
             
@@ -128,8 +126,19 @@ classdef BLFlash < Block
             y(2) = (TV - TL)/10;
             y(3) = (F*100 - (L*100 + V*2300))/10000;
             y(4) = (PV/1000 - satP(TV,obj.Const))/100;
-            y(5) = (PL/1000 - satP(TV,obj.Const))/100;            
-          
+            
+            if strcmp(liquidOut.type,'LSTREAM')
+                xL_dis = var(liquidOut.iX_dis);
+                xL_tot = var(liquidOut.iX_tot);
+                xF_dis = var(liquidIn.iX_dis);
+                xF_tot = var(liquidIn.iX_tot);
+                y(5) = F*xF_dis - L*xL_dis;
+                y(6) = F*xF_tot - L*xL_tot;                
+            else
+                PL = var(liquidOut.iPressure);
+                y(5) = (PL/1000 - satP(TV,obj.Const))/100;
+                y = y(1:end-1);
+            end
 
         end
         
